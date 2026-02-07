@@ -1,13 +1,15 @@
 package frc.robot.classes;
 
+import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 
 public abstract class MotorBase {
 
-    private final PWMMotorController _leader;
-    private final PWMMotorController _follower;
+    protected final SparkMax _leader;
+    private final SparkMax _follower;
     private final Encoder _encoder;
     private final PIDController _pidController;
 
@@ -17,14 +19,14 @@ public abstract class MotorBase {
         _leader = CreateMotor(channelA, isInverted);
         _follower = CreateMotor(channelB, isInverted);
 
-        _leader.addFollower(_follower);
+        _leader.
 
         _encoder = new Encoder(channelA, channelB);
         _leader.setInverted(isInverted);
         _encoder.setDistancePerPulse(0.01); // Example distance per pulse
     }
 
-    protected abstract PWMMotorController CreateMotor(int channel, boolean isInverted);
+    protected abstract SparkMax CreateMotor(int channel, boolean isInverted);
 
 
     public void setSpeeds(double metersPerSecond, double feedforward) {
