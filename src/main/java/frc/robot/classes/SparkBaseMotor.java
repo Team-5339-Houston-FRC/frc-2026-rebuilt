@@ -1,0 +1,79 @@
+package frc.robot.classes;
+
+import com.revrobotics.spark.SparkBase;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public abstract class SparkBaseMotor<T extends SparkBase> {
+
+    public T motor;
+    private Encoder encoder;
+    private PIDController pidController;
+    protected SparkBaseMotorConfig<T> config;
+
+    public SparkBaseMotor() {
+
+    }
+
+    public SparkBaseMotor(SparkBaseMotorConfig<T> config) {
+        this.config = config;
+        motor = CreateMotor(config);
+        pidController = new PIDController(0.1, 0.0, 0.0);
+        encoder = new Encoder(config.channels.channelA, config.channels.channelB);
+        encoder.setDistancePerPulse(config.distancePerPulse);
+    }
+
+    public SparkBaseMotor(int channelA, int channelB, boolean isInverted, double distancePerPulse) {
+        this(new SparkBaseMotorConfig<T>(
+                new SparkBaseMotorChannels(channelA, channelB),
+                isInverted, distancePerPulse));
+    }
+
+    public SparkBaseMotor(int channelA, int channelB, boolean isInverted) {
+        this(new SparkBaseMotorConfig<T>(
+                new SparkBaseMotorChannels(channelA, channelB),
+                isInverted));
+    }
+
+    public SparkBaseMotor(SparkBaseMotorChannels channels, boolean isInverted) {
+        this(new SparkBaseMotorConfig<T>(
+                new SparkBaseMotorChannels(channels.channelA, channels.channelB),
+                isInverted));
+    }
+
+    protected abstract T CreateMotor(int channel, boolean isInverted);
+
+    protected abstract T CreateMotor(SparkBaseMotorConfig<T> config);
+
+    public double get() {
+        return motor.get();
+    }
+
+    public void setSpeeds(double metersPerSecond, double feedforward) {
+        double output = pidController.calculate(encoder.getRate(), metersPerSecond);
+        // motor.setVoltage(output + feedforward);
+        motor.setVoltage(12);
+    }
+
+    // set the motor's speed
+    public void setVelocity(double speed) {
+        motor.set(speed);
+    }
+
+    public double getDistance() {
+        return encoder.getDistance();
+    }
+
+    public void record() {
+        String subSystem = "Drive";
+        String name = String.valueOf(config.channels.channelA);
+        String path = subSystem + "/" + name + "/";
+        int positionCoefficient = 1; // positionCoefficient();
+        SmartDashboard.putNumber(path + "Position", encoder.getDistance());
+        SmartDashboard.putNumber(path + "Velocity", positionCoefficient * encoder.get());
+        SmartDashboard.putNumber(path + "Current", motor.getOutputCurrent());
+        SmartDashboard.putNumber(path + "BusVoltage", motor.getBusVoltage());
+    }
+
+}

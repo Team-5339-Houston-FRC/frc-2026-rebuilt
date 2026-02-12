@@ -2,43 +2,55 @@ package frc.robot.classes;
 
 import com.revrobotics.sim.SparkMaxSim;
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import edu.wpi.first.wpilibj.simulation.PWMSim;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SparkMAXMotorSim extends SparkMAXMotor {
-    private final SparkMaxSim _sim;
+    private SparkMaxSim simMotor;
 
     public SparkMAXMotorSim(int channelA, int channelB, boolean isInverted) {
         super(channelA, channelB, isInverted);
-
-        _sim = new SparkMaxSim(getMotor());
+        simMotor = new SparkMaxSim(this.motor, DCMotor.getNEO(1));
     }
 
-    public void addFollower(SparkMAXMotor follower) {
-        this.addFollower(follower);
+    public SparkMAXMotorSim(SparkBaseMotorChannels channels, boolean isInverted) {
+        super(channels, isInverted);
+        simMotor = new SparkMaxSim(this.motor, DCMotor.getNEO(1));
     }
 
-    public static SparkMAXMotorSim CreateSparkMaxMotor(int channelA, int channelB, boolean isInverted) {
-        return new SparkMAXMotorSim(channelA, channelB, isInverted);
+    public static SparkMAXMotorSim CreateSparkMAXMotorSim(SparkBaseMotorChannels channels, boolean isInverted) {
+        return new SparkMAXMotorSim(channels, isInverted);
+    }
+    public void simulationPeriodic(double velocity, double vbus, double dt) {
+        velocity = 1500;
+        setVelocity(velocity);
+        simMotor.iterate(velocity, vbus, dt);
+        record();
     }
 
     @Override
-    protected PWMMotorController CreateMotor(int channel, boolean isInverted) {
-        PWMSparkMax l = new PWMSparkMax(channel);
-        l.setInverted(isInverted);
-        return l;
+    public void record() {
+        super.record();
+        String subSystem = "Drive/Sim";
+        String name = String.valueOf(config.channels.channelA);
+        String path = subSystem + "/" + name + "/";
+        int positionCoefficient = 1; // positionCoefficient();
+        SmartDashboard.putNumber(path + "Position", simMotor.getPosition());
+        SmartDashboard.putNumber(path + "Velocity", positionCoefficient * simMotor.getVelocity());
+        SmartDashboard.putNumber(path + "Current", simMotor.getMotorCurrent());
+        SmartDashboard.putNumber(path + "BusVoltage", simMotor.getBusVoltage());
     }
 
-    public void setDistance(double position) {
-        _sim.setPosition(position);
+    public void setDistance(double distance) {
+        simMotor.setPosition(distance);
     }
 
-    public void setRate(double rate) {
-        _sim.setSpeed(rate);
-    }
-
-    public void iterate() {
-        
+    public void setVelocity(double velocity) {
+        double voltage = 12;
+        if (Math.abs(velocity) > 0) {
+            voltage = 12;
+        }
+        this.motor.setVoltage(voltage);
+        simMotor.setVelocity(velocity);
     }
 }

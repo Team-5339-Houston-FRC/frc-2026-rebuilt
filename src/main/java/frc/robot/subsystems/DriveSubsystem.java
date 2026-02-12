@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.studica.frc.AHRS;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -15,17 +17,23 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.abstractions.ISparkMaxMotorGroup;
-import frc.robot.classes.SparkMaxMotorGroup;
-import frc.robot.classes.SparkMaxMotorGroupSim;
+import frc.robot.abstractions.ISparkMaxMotorArray;
+import frc.robot.classes.SparkBaseMotorChannels;
+import frc.robot.classes.SparkMaxMotorArray;
+import frc.robot.classes.SparkMaxMotorArraySim;
+import frc.robot.classes.SparkMaxMotorArraySim.Designation;
 
 public class DriveSubsystem extends SubsystemBase {
-  private final ISparkMaxMotorGroup m_leftMotor;
-  private final ISparkMaxMotorGroup m_rightMotor;
+
+  private final SparkMaxMotorArray m_leftMotor;
+  private final SparkMaxMotorArray m_rightMotor;
 
   private final Field2d m_field = new Field2d();
 
@@ -43,14 +51,23 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    List<SparkBaseMotorChannels> leftChannels = List.of(
+        new SparkBaseMotorChannels(0, 1),
+        new SparkBaseMotorChannels(2, 3));
+
+    List<SparkBaseMotorChannels> rightChannels = List.of(
+        new SparkBaseMotorChannels(4, 5),
+        new SparkBaseMotorChannels(6, 7));
+
     if (Robot.isSimulation()) {
-      m_leftMotor = new SparkMaxMotorGroupSim(0, 1, 2, 3, false);
-      m_rightMotor = new SparkMaxMotorGroupSim(4, 5, 6, 7, true);
+      m_leftMotor = new SparkMaxMotorArraySim(leftChannels, Designation.Left, false);
+      m_rightMotor = new SparkMaxMotorArraySim(rightChannels, Designation.Right, true);
     } else {
-      m_leftMotor = new SparkMaxMotorGroup(0, 1, 2, 3, false);
-      m_rightMotor = new SparkMaxMotorGroup(4, 5, 6, 7, true);
+      m_leftMotor = new SparkMaxMotorArray(leftChannels, false);
+      m_rightMotor = new SparkMaxMotorArray(rightChannels, true);
+      // DifferentialDrive driveTrain = new DifferentialDrive(m_leftMotor.motor,
+      // m_rightMotor.motor);
     }
-    ;
 
     m_drivetrainSim = new DifferentialDrivetrainSim(DCMotor.getNEO(2), 15, .5, 1, Units.inchesToMeters(2),
         Units.inchesToMeters(4), null);
@@ -68,8 +85,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(double leftSpeed, double rightSpeed) {
-    m_leftMotor.setMotorSpeed(leftSpeed);
-    m_rightMotor.setMotorSpeed(rightSpeed);
+    double leftFeedforward = m_feedforward.calculate(leftSpeed);
+    double rightFeedforward = m_feedforward.calculate(rightSpeed);
+
+    m_leftMotor.setSpeeds(.1, leftFeedforward);
+    m_rightMotor.setSpeeds(.1, rightFeedforward);
   }
 
   public void updateOdometry() {
@@ -87,15 +107,18 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+    // This method will be called once per scheduler run Dduring simulation
     m_drivetrainSim.setInputs(
         m_leftMotor.get() * RobotController.getInputVoltage(), m_rightMotor.get() * RobotController.getInputVoltage());
+
+    RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_drivetrainSim.getCurrentDrawAmps()));
+
     m_drivetrainSim.update(0.02);
-    m_leftMotor.setDistance(m_drivetrainSim.getLeftPositionMeters());
-    m_leftMotor.setRate(m_drivetrainSim.getLeftVelocityMetersPerSecond());
-    m_rightMotor.setDistance(m_drivetrainSim.getRightPositionMeters());
-    m_rightMotor.setRate(m_drivetrainSim.getRightVelocityMetersPerSecond());
+    m_leftMotor.simulationPeriodic(m_drivetrainSim, Designation.Left);
+    m_rightMotor.simulationPeriodic(m_drivetrainSim, Designation.Right);
+
     updateOdometry();
+
     m_field.setRobotPose(m_odometry.getPoseMeters());
     publisher.set(m_odometry.getPoseMeters());
   }

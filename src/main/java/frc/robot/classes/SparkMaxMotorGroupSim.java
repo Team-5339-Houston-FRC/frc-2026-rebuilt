@@ -8,8 +8,8 @@ public class SparkMaxMotorGroupSim implements ISparkMaxMotorGroup {
     private final SparkMAXMotorSim _follower;
 
     public SparkMaxMotorGroupSim(int channelA, int channelB, int channelC, int channelD, boolean isInverted) {
-        _leader = SparkMAXMotorSim.CreateSparkMaxMotor(channelA, channelB, isInverted);
-        _follower = SparkMAXMotorSim.CreateSparkMaxMotor(channelC, channelD, isInverted);
+        _leader = new SparkMAXMotorSim(channelA, channelB, isInverted);
+        _follower = new SparkMAXMotorSim(channelC, channelD, isInverted);
     }
 
     public void setSpeeds(double metersPerSecond, double feedforward) {
@@ -18,7 +18,7 @@ public class SparkMaxMotorGroupSim implements ISparkMaxMotorGroup {
 
     // set the motor's speed
     public void setMotorSpeed(double speed) {
-        _leader.setMotorSpeed(speed);
+        _leader.setVelocity(speed);
     }
 
     public double getDistance() {
@@ -28,12 +28,12 @@ public class SparkMaxMotorGroupSim implements ISparkMaxMotorGroup {
     public double get() {
         return _leader.get();
     }
-    
+
     public void setDistance(double position) {
         _leader.setDistance(position);
     }
 
     public void setRate(double rate) {
-        _leader.setRate(rate);
+        _leader.setVelocity(rate);
     }
 }

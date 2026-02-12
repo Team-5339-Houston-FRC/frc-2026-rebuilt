@@ -1,5 +1,7 @@
 package frc.robot.classes;
 
+import com.revrobotics.spark.SparkMax;
+
 import frc.robot.abstractions.ISparkMaxMotorGroup;
 
 public class SparkMaxMotorGroup implements ISparkMaxMotorGroup {
@@ -8,10 +10,12 @@ public class SparkMaxMotorGroup implements ISparkMaxMotorGroup {
     private final SparkMAXMotor _follower;
 
     public SparkMaxMotorGroup(int channelA, int channelB, int channelC, int channelD, boolean isInverted) {
-        _leader = SparkMAXMotor.CreateSparkMaxMotor(channelA, channelB, isInverted);
-        _follower = SparkMAXMotor.CreateSparkMaxMotor(channelC, channelD, isInverted);
+        _leader = new SparkMAXMotor(channelA, channelB, isInverted);
 
-        _leader.addFollower(_follower);
+        SparkBaseMotorConfig<SparkMax> followerConfig = new SparkBaseMotorConfig<SparkMax>(
+                new SparkBaseMotorChannels(channelC, channelD), true, _leader);
+
+        _follower = new SparkMAXMotor(followerConfig);
     }
 
     @Override
@@ -22,7 +26,7 @@ public class SparkMaxMotorGroup implements ISparkMaxMotorGroup {
     // set the motor's speed
     @Override
     public void setMotorSpeed(double speed) {
-        _leader.setMotorSpeed(speed);
+        _leader.setVelocity(speed);
     }
 
     @Override
@@ -38,6 +42,6 @@ public class SparkMaxMotorGroup implements ISparkMaxMotorGroup {
     }
 
     public void setRate(double rate) {
-        
+
     }
 }

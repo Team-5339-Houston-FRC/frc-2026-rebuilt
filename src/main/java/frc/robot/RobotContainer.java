@@ -11,6 +11,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,7 +26,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   @SuppressWarnings("unused")
   private final ClimberSubsystem m_climberSub = new ClimberSubsystem();
-  private final DriveSubsystem m_driveSub = new DriveSubsystem();
+  public final DriveSubsystem m_driveSub = new DriveSubsystem();
   @SuppressWarnings("unused")
   private final FuelSubsystem m_fuelSub = new FuelSubsystem();
   @SuppressWarnings("unused")
@@ -35,8 +36,11 @@ public class RobotContainer {
   private final PDH m_pdh = new PDH();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-    new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  // private final CommandXboxController m_driverController =
+  //   new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  
+    private final Joystick m_driverController =
+    new Joystick(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -47,8 +51,8 @@ public class RobotContainer {
 				// left stick controls left side of robot, right stick controls right side; tank drive
 				new RunCommand(
 						() -> m_driveSub.drive(
-								-MathUtil.applyDeadband(m_driverController.getLeftY(), OperatorConstants.kDriveDeadband) * Constants.driveMultiplier,
-								-MathUtil.applyDeadband(m_driverController.getLeftX(), OperatorConstants.kDriveDeadband) * Constants.driveMultiplier),
+								-MathUtil.applyDeadband(m_driverController.getX(), OperatorConstants.kDriveDeadband) * Constants.driveMultiplier,
+								-MathUtil.applyDeadband(m_driverController.getY(), OperatorConstants.kDriveDeadband) * Constants.driveMultiplier),
 						m_driveSub));
   }
 

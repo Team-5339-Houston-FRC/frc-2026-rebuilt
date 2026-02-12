@@ -1,40 +1,48 @@
 package frc.robot.classes;
 
-import com.revrobotics.sim.SparkMaxSim;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+public class SparkMAXMotor extends SparkBaseMotor<SparkMax> {
 
-public class SparkMAXMotor extends MotorBase {
+    public SparkMAXMotor() {
 
+    }
+    
     public SparkMAXMotor(int channelA, int channelB, boolean isInverted) {
         super(channelA, channelB, isInverted);
     }
 
-    public void addFollower(SparkMAXMotor follower) {
-        this.addFollower(follower);
+    public SparkMAXMotor(SparkBaseMotorChannels channels, boolean isInverted) {
+        super(channels, isInverted);
     }
 
-    public static SparkMAXMotor CreateSparkMaxMotor(int channelA, int channelB, boolean isInverted) {
-        return new SparkMAXMotor(channelA, channelB, isInverted);
+    public SparkMAXMotor(SparkBaseMotorConfig<SparkMax> config) {
+        super(config);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected SparkMax CreateMotor(int channel, boolean isInverted) {
-        SparkMax l = new SparkMax(channel, MotorType.kBrushless);
-        l.setInverted(isInverted);
-        
-        return l;
+        SparkMax motor = new SparkMax(channel, MotorType.kBrushless);
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.inverted(isInverted);
+        motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        return motor;
     }
 
-    public SparkMax getMotor() {
-        return (SparkMax) super._leader;
+    @Override
+    protected SparkMax CreateMotor(SparkBaseMotorConfig<SparkMax> config) {
+        SparkMax motor = new SparkMax(config.channels.channelA, MotorType.kBrushless);
+        SparkMaxConfig sparkMaxConfig = new SparkMaxConfig();
+        sparkMaxConfig.inverted(config.isInverted);
+        if (config.leader != null) {
+            sparkMaxConfig.follow(config.leader.motor);
+        }
+        motor.configure(sparkMaxConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        return motor;
     }
 
-    public double get() {
-        return getMotor().get();
-    }
 }
