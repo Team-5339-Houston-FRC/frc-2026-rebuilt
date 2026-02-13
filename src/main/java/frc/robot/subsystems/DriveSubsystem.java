@@ -35,8 +35,6 @@ public class DriveSubsystem extends SubsystemBase {
   private final SparkMaxMotorArray m_leftMotor;
   private final SparkMaxMotorArray m_rightMotor;
 
-  private final double test = 2;
-
   private final Field2d m_field = new Field2d();
 
   private final DifferentialDrivetrainSim m_drivetrainSim;
