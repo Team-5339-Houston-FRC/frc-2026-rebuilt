@@ -129,4 +129,12 @@ public final class Constants {
     public static final int k_PWMId = 9;
     public static final int k_totalLength = 300;
   }
+
+  public static class FuelConstants {
+    public static final int primaryChannelA = 8;
+    public static final int primaryChannelB = 9;
+    public static final int secondaryChannelA = 10;
+    public static final int secondaryChannelB = 11;
+    public static final int maxSpeed = 1500;
+  }
 }

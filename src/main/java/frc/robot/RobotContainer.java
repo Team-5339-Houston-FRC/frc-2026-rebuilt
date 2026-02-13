@@ -6,6 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.classes.PDH;
+import frc.robot.commands.deballonize;
+import frc.robot.commands.intake;
+import frc.robot.commands.shoot;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FuelSubsystem;
@@ -17,9 +20,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -36,40 +42,53 @@ public class RobotContainer {
   private final PDH m_pdh = new PDH();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  // private final CommandXboxController m_driverController =
-  //   new CommandXboxController(OperatorConstants.kDriverControllerPort);
-  
-    private final Joystick m_driverController =
-    new Joystick(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_controller = new CommandXboxController(
+      OperatorConstants.kDriverControllerPort);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
 
     m_driveSub.setDefaultCommand(
-				// left stick controls left side of robot, right stick controls right side; tank drive
-				new RunCommand(
-						() -> m_driveSub.drive(
-								-MathUtil.applyDeadband(m_driverController.getX(), OperatorConstants.kDriveDeadband) * Constants.driveMultiplier,
-								-MathUtil.applyDeadband(m_driverController.getY(), OperatorConstants.kDriveDeadband) * Constants.driveMultiplier),
-						m_driveSub));
+        // left stick controls left side of robot, right stick controls right side; tank
+        // drive
+        new RunCommand(
+            () -> m_driveSub.drive(
+                -MathUtil.applyDeadband(m_controller.getLeftY(), OperatorConstants.kDriveDeadband)
+                    * Constants.driveMultiplier,
+                -MathUtil.applyDeadband(m_controller.getRightY(), OperatorConstants.kDriveDeadband)
+                    * Constants.driveMultiplier),
+            m_driveSub));
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    // to make a new binding: m_driverController.a().onTrue(new YourCommandHere());
+    // to make a new binding: m_controller.a().onTrue(new YourCommandHere());
     // a() could be replaced with any other button
+    m_controller.leftBumper()
+      .whileTrue(new intake());
+    m_controller.rightBumper()
+      .whileTrue(new deballonize());
+    m_controller.rightTrigger(.7)
+      .whileTrue(new shoot());
   }
 
   /**
@@ -78,7 +97,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   // public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    //return Autos.exampleAuto(m_exampleSubsystem);
+  // An example command will be run in autonomous
+  // return Autos.exampleAuto(m_exampleSubsystem);
   // }
 }
