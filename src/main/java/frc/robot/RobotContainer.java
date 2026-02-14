@@ -9,12 +9,12 @@ import frc.robot.classes.PDH;
 import frc.robot.commands.deballonize;
 import frc.robot.commands.intake;
 import frc.robot.commands.shoot;
+import frc.robot.commands.stopFuel;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -89,6 +89,8 @@ public class RobotContainer {
       .whileTrue(new deballonize());
     m_controller.rightTrigger(.7)
       .whileTrue(new shoot());
+    m_controller.x()
+      .onTrue(new stopFuel());
   }
 
   /**
