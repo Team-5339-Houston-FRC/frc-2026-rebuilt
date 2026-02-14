@@ -131,8 +131,15 @@ public class DriveSubsystem extends SubsystemBase {
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_drivetrainSim.getCurrentDrawAmps()));
 
     m_drivetrainSim.update(0.02);
-    m_leftMotor.simulationPeriodic(m_drivetrainSim, Designation.Left);
-    m_rightMotor.simulationPeriodic(m_drivetrainSim, Designation.Right);
+
+    double leftVelocity = m_drivetrainSim.getLeftVelocityMetersPerSecond();
+    double leftDistance = m_drivetrainSim.getLeftPositionMeters();
+
+    
+    double rightVelocity = m_drivetrainSim.getLeftVelocityMetersPerSecond();
+    double rightDistance = m_drivetrainSim.getLeftPositionMeters();
+    m_leftMotor.simulationPeriodic(leftVelocity, leftDistance);
+    m_rightMotor.simulationPeriodic(rightVelocity, rightDistance);
 
     updateOdometry();
 

@@ -14,22 +14,15 @@ public class SparkMAXMotorSim {
     public SparkMAXMotorSim(int channelA, int channelB, boolean isInverted) {
         motor = new SparkMAXMotor(channelA, channelB, isInverted);
         simMotor = new SparkMaxSim(motor.motor, DCMotor.getNEO(1));
-        // SimDevice simDevice = new SimDevice(channelA);
-        // motor.encoder.setSimDevice(simDevice);
-    }
+   }
 
     public SparkMAXMotorSim(SparkMAXMotor motor) {
         simMotor = new SparkMaxSim(motor.motor, DCMotor.getNEO(1));
-        this.motor = motor;
-        //  SimDevice simDevice = new SimDevice(motor.config.channels.channelA);
-        //  motor.encoder.setSimDevice(simDevice);
-    }
+        this.motor = motor; }
 
     public SparkMAXMotorSim(SparkBaseMotorChannels channels, boolean isInverted) {
         motor = new SparkMAXMotor(channels, isInverted);
-        simMotor = new SparkMaxSim(motor.motor, DCMotor.getNEO(1));
-        //  SimDevice simDevice = new SimDevice(motor.config.channels.channelA);
-        //  motor.encoder.setSimDevice(simDevice);
+        simMotor = new SparkMaxSim(motor.motor, DCMotor.getNEO(1)); 
     }
 
     public static SparkMAXMotorSim CreateSparkMAXMotorSim(SparkBaseMotorChannels channels, boolean isInverted) {

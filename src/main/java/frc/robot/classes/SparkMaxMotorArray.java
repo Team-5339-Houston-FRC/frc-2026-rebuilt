@@ -51,7 +51,7 @@ public class SparkMaxMotorArray implements ISparkMaxMotorArray {
         distance = position;
     }
 
-    public void simulationPeriodic(DifferentialDrivetrainSim drivetrainSim, Designation designation) {
+    public void simulationPeriodic(double velocity, double distance) {
 
     }
 
