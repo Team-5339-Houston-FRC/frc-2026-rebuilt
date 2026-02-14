@@ -25,7 +25,6 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
 
     public void setSpeeds(double metersPerSecond, double feedforward) {
         leaderSim.setSpeeds(metersPerSecond, feedforward);
-        leaderSim.setVelocity(metersPerSecond);
     }
 
     @Override
@@ -35,11 +34,13 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
         double deltaTime = 0.02; // 20ms loop
         double deltaRotations = rotationsPerSecond * deltaTime;
 
-        if (designation == Designation.Left && this.designation == Designation.Left) {
+        if (designation == Designation.Left && this.designation == Designation.Left
+                && Math.abs(drivetrainSim.getLeftVelocityMetersPerSecond()) > 0) {
             velocity = drivetrainSim.getLeftVelocityMetersPerSecond();
             setDistance(drivetrainSim.getLeftPositionMeters());
             leaderSim.simulationPeriodic(velocity, deltaTime, deltaRotations);
-        } else if (designation == Designation.Right && this.designation == Designation.Right) {
+        } else if (designation == Designation.Right && this.designation == Designation.Right
+                && Math.abs(drivetrainSim.getRightVelocityMetersPerSecond()) > 0) {
             velocity = drivetrainSim.getRightVelocityMetersPerSecond();
             setDistance(drivetrainSim.getRightPositionMeters());
             leaderSim.simulationPeriodic(velocity, deltaTime, deltaRotations);
