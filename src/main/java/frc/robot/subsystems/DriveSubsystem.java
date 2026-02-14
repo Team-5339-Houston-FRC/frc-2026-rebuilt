@@ -99,14 +99,18 @@ public class DriveSubsystem extends SubsystemBase {
     // double rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
     var chassisSpeeds = new ChassisSpeeds(leftSpeed, rightSpeed, 0);
     // Convert to wheel speeds
-    DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds); 
-    m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
-    m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
+
+    DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
+    // m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
+    // m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
+    driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
   }
 
   public void updateOdometry() {
+    double leftDistance = m_leftMotor.getDistance();
+    double rightDistance = m_rightMotor.getDistance();
     m_odometry.update(
-        m_gyro.getRotation2d(), m_leftMotor.getDistance(), m_rightMotor.getDistance());
+        m_gyro.getRotation2d(), leftDistance, rightDistance);
   }
 
   @Override
@@ -121,7 +125,8 @@ public class DriveSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run Dduring simulation
     m_drivetrainSim.setInputs(
-        m_leftMotor.getVoltage() * RobotController.getInputVoltage(), m_rightMotor.getVoltage() * RobotController.getInputVoltage());
+        m_leftMotor.getVoltage() * RobotController.getInputVoltage(),
+        m_rightMotor.getVoltage() * RobotController.getInputVoltage());
 
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_drivetrainSim.getCurrentDrawAmps()));
 

@@ -20,7 +20,6 @@ public class SparkMaxMotorArray implements ISparkMaxMotorArray {
     }
 
     public SparkMaxMotorArray(List<SparkBaseMotorChannels> channels, boolean isInverted) {
-
         SparkMAXMotor leader = null;
         for (SparkBaseMotorChannels channel : channels) {
             SparkBaseMotorConfig<SparkMax> config = new SparkBaseMotorConfig<SparkMax>(channel, isInverted,

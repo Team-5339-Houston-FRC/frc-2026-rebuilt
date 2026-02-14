@@ -1,5 +1,6 @@
 package frc.robot.classes;
 
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -9,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public abstract class SparkBaseMotor<T extends SparkBase> {
 
     public T motor;
-    protected Encoder encoder;
+    protected RelativeEncoder encoder;
     protected SparkClosedLoopController pidController;
     protected SparkBaseMotorConfig<T> config;
 
@@ -21,8 +22,8 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         this.config = config;
         motor = CreateMotor(config);
         pidController = motor.getClosedLoopController();
-        encoder = new Encoder(config.channels.channelA, config.channels.channelB);
-        encoder.setDistancePerPulse(config.distancePerPulse);
+        encoder = motor.getEncoder();
+        //encoder.setDistancePerPulse(config.distancePerPulse);
     }
 
     public SparkBaseMotor(int channelA, int channelB, boolean isInverted, double distancePerPulse) {
@@ -55,6 +56,9 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         return motor.getAppliedOutput() * motor.getBusVoltage();
     }
 
+    public void setVoltage(double voltage) {
+        motor.setVoltage(voltage);
+    }
     public void setSpeeds(double metersPerSecond, double feedforward) {
         // double output = pidController.calculate(encoder.getRate(), metersPerSecond);
         // motor.setVoltage(output + feedforward);
@@ -73,7 +77,7 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
     }
 
     public double getDistance() {
-        return encoder.getDistance();
+        return encoder.getPosition();
     }
 
     public void record() {
@@ -81,8 +85,9 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         String name = String.valueOf(config.channels.channelA);
         String path = subSystem + "/" + name + "/";
         int positionCoefficient = 1; // positionCoefficient();
-        SmartDashboard.putNumber(path + "Position", encoder.getDistance());
-        SmartDashboard.putNumber(path + "Velocity", positionCoefficient * encoder.get());
+
+        SmartDashboard.putNumber(path + "Position", encoder.getPosition());
+        SmartDashboard.putNumber(path + "Velocity", positionCoefficient * motor.get());
         SmartDashboard.putNumber(path + "Current", motor.getOutputCurrent());
         SmartDashboard.putNumber(path + "BusVoltage", motor.getBusVoltage());
         SmartDashboard.putNumber(path + "Voltage", getVoltage());

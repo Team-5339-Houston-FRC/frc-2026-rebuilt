@@ -3,6 +3,7 @@ package frc.robot.classes;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -13,16 +14,22 @@ public class SparkMAXMotorSim {
     public SparkMAXMotorSim(int channelA, int channelB, boolean isInverted) {
         motor = new SparkMAXMotor(channelA, channelB, isInverted);
         simMotor = new SparkMaxSim(motor.motor, DCMotor.getNEO(1));
+        // SimDevice simDevice = new SimDevice(channelA);
+        // motor.encoder.setSimDevice(simDevice);
     }
 
     public SparkMAXMotorSim(SparkMAXMotor motor) {
         simMotor = new SparkMaxSim(motor.motor, DCMotor.getNEO(1));
         this.motor = motor;
+        //  SimDevice simDevice = new SimDevice(motor.config.channels.channelA);
+        //  motor.encoder.setSimDevice(simDevice);
     }
 
     public SparkMAXMotorSim(SparkBaseMotorChannels channels, boolean isInverted) {
         motor = new SparkMAXMotor(channels, isInverted);
         simMotor = new SparkMaxSim(motor.motor, DCMotor.getNEO(1));
+        //  SimDevice simDevice = new SimDevice(motor.config.channels.channelA);
+        //  motor.encoder.setSimDevice(simDevice);
     }
 
     public static SparkMAXMotorSim CreateSparkMAXMotorSim(SparkBaseMotorChannels channels, boolean isInverted) {
@@ -35,7 +42,7 @@ public class SparkMAXMotorSim {
     }
 
     public double getVoltage() {
-        return simMotor.getAppliedOutput() * simMotor.getBusVoltage();
+        return motor.getVoltage();
     }
 
     public void record() {
@@ -56,12 +63,7 @@ public class SparkMAXMotorSim {
     }
 
     public void setVelocity(double velocity) {
-        double voltage = 12;
-        if (Math.abs(velocity) > 0) {
-            voltage = 12;
-        }
-        // this.motor.setVoltage(voltage);
-        // this.motor.set(velocity);
+        motor.setVoltage(12);
         simMotor.setVelocity(velocity);
         motor.setVelocity(velocity);
     }
