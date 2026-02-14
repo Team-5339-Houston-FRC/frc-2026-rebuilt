@@ -1,6 +1,9 @@
 package frc.robot.classes;
 
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,7 +12,7 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
 
     public T motor;
     private Encoder encoder;
-    private PIDController pidController;
+    private SparkClosedLoopController pidController;
     protected SparkBaseMotorConfig<T> config;
 
     public SparkBaseMotor() {
@@ -19,7 +22,8 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
     public SparkBaseMotor(SparkBaseMotorConfig<T> config) {
         this.config = config;
         motor = CreateMotor(config);
-        pidController = new PIDController(0.1, 0.0, 0.0);
+        pidController = motor.getClosedLoopController();
+        // pidController = new PIDController(0.1, 0.0, 0.0);
         encoder = new Encoder(config.channels.channelA, config.channels.channelB);
         encoder.setDistancePerPulse(config.distancePerPulse);
     }
@@ -51,9 +55,10 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
     }
 
     public void setSpeeds(double metersPerSecond, double feedforward) {
-        double output = pidController.calculate(encoder.getRate(), metersPerSecond);
+        //double output = pidController.calculate(encoder.getRate(), metersPerSecond);
         // motor.setVoltage(output + feedforward);
         motor.setVoltage(12);
+        pidController.setReference(metersPerSecond, ControlType.kVelocity);
     }
 
     // set the motor's speed

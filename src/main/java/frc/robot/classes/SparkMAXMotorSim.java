@@ -22,7 +22,6 @@ public class SparkMAXMotorSim extends SparkMAXMotor {
         return new SparkMAXMotorSim(channels, isInverted);
     }
     public void simulationPeriodic(double velocity, double vbus, double dt) {
-        velocity = 1500;
         setVelocity(velocity);
         simMotor.iterate(velocity, vbus, dt);
         record();

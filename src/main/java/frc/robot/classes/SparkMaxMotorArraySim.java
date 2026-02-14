@@ -44,6 +44,8 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
             setDistance(drivetrainSim.getRightPositionMeters());
             leaderSim.simulationPeriodic(velocity, deltaTime, deltaRotations);
         }
+
+        double velocityTest = velocity;
     }
 
     @Override
