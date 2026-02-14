@@ -16,6 +16,7 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
         for (SparkBaseMotorChannels channel : channels) {
             if (leaderSim == null) {
                 leaderSim = SparkMAXMotorSim.CreateSparkMAXMotorSim(channel, isInverted);
+                this.motor = leaderSim.motor;
             } else {
                 SparkMAXMotorSim follower = SparkMAXMotorSim.CreateSparkMAXMotorSim(channel, isInverted);
                 motorSims.add(follower);
@@ -34,13 +35,11 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
         double deltaTime = 0.02; // 20ms loop
         double deltaRotations = rotationsPerSecond * deltaTime;
 
-        if (designation == Designation.Left && this.designation == Designation.Left
-                && Math.abs(drivetrainSim.getLeftVelocityMetersPerSecond()) > 0) {
+        if (designation == Designation.Left && this.designation == Designation.Left) {
             velocity = drivetrainSim.getLeftVelocityMetersPerSecond();
             setDistance(drivetrainSim.getLeftPositionMeters());
             leaderSim.simulationPeriodic(velocity, deltaTime, deltaRotations);
-        } else if (designation == Designation.Right && this.designation == Designation.Right
-                && Math.abs(drivetrainSim.getRightVelocityMetersPerSecond()) > 0) {
+        } else if (designation == Designation.Right && this.designation == Designation.Right) {
             velocity = drivetrainSim.getRightVelocityMetersPerSecond();
             setDistance(drivetrainSim.getRightPositionMeters());
             leaderSim.simulationPeriodic(velocity, deltaTime, deltaRotations);
