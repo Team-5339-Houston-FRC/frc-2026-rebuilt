@@ -10,11 +10,13 @@ import frc.robot.subsystems.FuelSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class shoot extends Command {
-  private final FuelSubsystem m_fuelSubsystem = new FuelSubsystem();
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final FuelSubsystem m_fuelSubsystem;
+  private final DriveSubsystem m_driveSubsystem;
 
   /** Creates a new shoot. */
-  public shoot() {
+  public shoot(FuelSubsystem fuelSubsystem, DriveSubsystem driveSubsystem) {
+    m_fuelSubsystem = fuelSubsystem;
+    m_driveSubsystem = driveSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_fuelSubsystem, m_driveSubsystem);
   }

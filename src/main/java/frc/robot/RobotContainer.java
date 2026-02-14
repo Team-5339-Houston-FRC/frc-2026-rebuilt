@@ -84,13 +84,13 @@ public class RobotContainer {
     // to make a new binding: m_controller.a().onTrue(new YourCommandHere());
     // a() could be replaced with any other button
     m_controller.leftBumper()
-      .whileTrue(new intake());
+      .whileTrue(new intake(m_fuelSub));
     m_controller.rightBumper()
-      .whileTrue(new deballonize());
+      .whileTrue(new deballonize(m_fuelSub));
     m_controller.rightTrigger(.7)
-      .whileTrue(new shoot());
+      .whileTrue(new shoot(m_fuelSub, m_driveSub));
     m_controller.x()
-      .onTrue(new stopFuel());
+      .onTrue(new stopFuel(m_fuelSub));
   }
 
   /**
