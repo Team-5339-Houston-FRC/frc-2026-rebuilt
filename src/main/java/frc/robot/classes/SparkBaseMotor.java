@@ -54,11 +54,18 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         return motor.get();
     }
 
+    public double getVoltage() {
+        if (motor != null) {
+            return motor.getAppliedOutput() * motor.getBusVoltage();
+        }
+        return 0;
+    }
+
     public void setSpeeds(double metersPerSecond, double feedforward) {
-        //double output = pidController.calculate(encoder.getRate(), metersPerSecond);
+        // double output = pidController.calculate(encoder.getRate(), metersPerSecond);
         // motor.setVoltage(output + feedforward);
+        pidController.setSetpoint(metersPerSecond, ControlType.kVelocity);
         motor.setVoltage(12);
-        pidController.setReference(metersPerSecond, ControlType.kVelocity);
     }
 
     // set the motor's speed

@@ -121,7 +121,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run Dduring simulation
     m_drivetrainSim.setInputs(
-        m_leftMotor.get() * RobotController.getInputVoltage(), m_rightMotor.get() * RobotController.getInputVoltage());
+        m_leftMotor.getVoltage() * RobotController.getInputVoltage(), m_rightMotor.getVoltage() * RobotController.getInputVoltage());
 
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_drivetrainSim.getCurrentDrawAmps()));
 
