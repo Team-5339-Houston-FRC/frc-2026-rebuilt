@@ -3,16 +3,14 @@ package frc.robot.classes;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public abstract class SparkBaseMotor<T extends SparkBase> {
 
     public T motor;
-    private Encoder encoder;
-    private SparkClosedLoopController pidController;
+    protected Encoder encoder;
+    protected SparkClosedLoopController pidController;
     protected SparkBaseMotorConfig<T> config;
 
     public SparkBaseMotor() {
@@ -23,7 +21,6 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         this.config = config;
         motor = CreateMotor(config);
         pidController = motor.getClosedLoopController();
-        // pidController = new PIDController(0.1, 0.0, 0.0);
         encoder = new Encoder(config.channels.channelA, config.channels.channelB);
         encoder.setDistancePerPulse(config.distancePerPulse);
     }
@@ -55,21 +52,23 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
     }
 
     public double getVoltage() {
-        if (motor != null) {
-            return motor.getAppliedOutput() * motor.getBusVoltage();
-        }
-        return 0;
+        return motor.getAppliedOutput() * motor.getBusVoltage();
     }
 
     public void setSpeeds(double metersPerSecond, double feedforward) {
         // double output = pidController.calculate(encoder.getRate(), metersPerSecond);
         // motor.setVoltage(output + feedforward);
         pidController.setSetpoint(metersPerSecond, ControlType.kVelocity);
+        pidController.setSetpoint(1, ControlType.kPosition);
         motor.setVoltage(12);
+        motor.set(metersPerSecond);
     }
 
     // set the motor's speed
     public void setVelocity(double speed) {
+        pidController.setSetpoint(speed, ControlType.kVelocity);
+        pidController.setSetpoint(0, ControlType.kPosition);
+        motor.setVoltage(12);
         motor.set(speed);
     }
 
@@ -86,6 +85,7 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         SmartDashboard.putNumber(path + "Velocity", positionCoefficient * encoder.get());
         SmartDashboard.putNumber(path + "Current", motor.getOutputCurrent());
         SmartDashboard.putNumber(path + "BusVoltage", motor.getBusVoltage());
+        SmartDashboard.putNumber(path + "Voltage", getVoltage());
     }
 
 }

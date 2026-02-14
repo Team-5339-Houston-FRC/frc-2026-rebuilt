@@ -73,7 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
       m_rightMotor = new SparkMaxMotorArray(rightChannels, true);
     }
 
-    driveTrain = new DifferentialDrive(m_leftMotor.motor, m_rightMotor.motor);
+    driveTrain = new DifferentialDrive(m_leftMotor.getLeader().motor, m_rightMotor.getLeader().motor);
     kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(21.5));
     m_drivetrainSim = new DifferentialDrivetrainSim(DCMotor.getNEO(2), 15, .5, 1, Units.inchesToMeters(2),
         Units.inchesToMeters(4), null);

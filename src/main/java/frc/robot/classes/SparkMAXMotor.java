@@ -3,6 +3,7 @@ package frc.robot.classes;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -44,5 +45,9 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> {
         motor.configure(sparkMaxConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         return motor;
     }
-
+    
+    @Override
+    public void setSpeeds(double metersPerSecond, double feedforward) {
+      super.setSpeeds(metersPerSecond, feedforward);
+    }
 }
