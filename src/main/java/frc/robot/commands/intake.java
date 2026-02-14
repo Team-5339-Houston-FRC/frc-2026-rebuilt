@@ -9,10 +9,11 @@ import frc.robot.subsystems.FuelSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class intake extends Command {
-  private final FuelSubsystem m_fuelSubsystem = new FuelSubsystem();
+  private final FuelSubsystem m_fuelSubsystem;
 
   /** Creates a new intake. */
-  public intake() {
+  public intake(FuelSubsystem fuelSubsystem) {
+    m_fuelSubsystem = fuelSubsystem;
     addRequirements(m_fuelSubsystem);
   }
 
@@ -31,6 +32,7 @@ public class intake extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_fuelSubsystem.stop();
   }
 
   // Returns true when the command should end.

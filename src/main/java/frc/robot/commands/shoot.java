@@ -10,11 +10,13 @@ import frc.robot.subsystems.FuelSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class shoot extends Command {
-  private final FuelSubsystem m_fuelSubsystem = new FuelSubsystem();
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final FuelSubsystem m_fuelSubsystem;
+  private final DriveSubsystem m_driveSubsystem;
 
   /** Creates a new shoot. */
-  public shoot() {
+  public shoot(FuelSubsystem fuelSubsystem, DriveSubsystem driveSubsystem) {
+    m_fuelSubsystem = fuelSubsystem;
+    m_driveSubsystem = driveSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_fuelSubsystem, m_driveSubsystem);
   }
@@ -25,11 +27,15 @@ public class shoot extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_fuelSubsystem.shoot();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_fuelSubsystem.stop();
+  }
 
   // Returns true when the command should end.
   @Override

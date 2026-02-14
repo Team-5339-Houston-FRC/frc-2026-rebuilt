@@ -19,11 +19,18 @@ public class FuelSubsystem extends SubsystemBase {
     }
 
     public void shoot() {
-
+        m_primaryMotor.setVelocity(FuelConstants.maxSpeed);
+        m_secondaryMotor.setVelocity(-1*FuelConstants.maxSpeed);
     }
 
     //decolonize but balls
     public void deballonize() {
+        m_primaryMotor.setVelocity(-1*FuelConstants.maxSpeed);
+        m_secondaryMotor.setVelocity(-1*FuelConstants.maxSpeed);
+    }
 
+    public void stop() {
+        m_primaryMotor.setVelocity(0);
+        m_secondaryMotor.setVelocity(0);
     }
 }
