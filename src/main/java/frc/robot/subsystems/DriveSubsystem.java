@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Robot;
@@ -55,6 +56,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault()
       .getStructTopic("Robot Pose", Pose2d.struct)
+      .publish();
+
+  StructPublisher<Rotation2d> headingPublisher = NetworkTableInstance.getDefault()
+      .getStructTopic("Heading", Rotation2d.struct)
       .publish();
 
   /** Creates a new DriveSubsystem. */
@@ -118,11 +123,11 @@ public class DriveSubsystem extends SubsystemBase {
     double rightDistance = m_rightMotor.getDistance();
 
     // m_odometry.update(
-    //     m_gyro.getRotation2d(), leftDistance, rightDistance);
+    // m_gyro.getRotation2d(), leftDistance, rightDistance);
 
-    
-    m_odometry.update(
-      m_drivetrainSim.getHeading(), leftDistance, rightDistance);
+    m_odometry.update(m_drivetrainSim.getHeading(), leftDistance, rightDistance);
+    headingPublisher.set(m_drivetrainSim.getHeading());
+
   }
 
   @Override
@@ -155,14 +160,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     // updateOdometry();
     // m_field.setRobotPose(m_odometry.getPoseMeters());
-    // publisher.set(m_odometry.getPoseMeters());  double leftDistance = m_leftMotor.getDistance();
-
+    // publisher.set(m_odometry.getPoseMeters()); double leftDistance =
+    // m_leftMotor.getDistance();
 
     // m_odometry.update(
-    //     m_gyro.getRotation2d(), leftDistance, rightDistance);
+    // m_gyro.getRotation2d(), leftDistance, rightDistance);
 
-    
     m_odometry.update(
-      m_drivetrainSim.getHeading(), leftDistance, rightDistance);
+        m_drivetrainSim.getHeading(), leftDistance, rightDistance);
   }
 }
