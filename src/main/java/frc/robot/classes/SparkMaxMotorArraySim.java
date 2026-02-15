@@ -3,19 +3,14 @@ package frc.robot.classes;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revrobotics.spark.SparkMax;
-
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 
 public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
 
-    private final Designation designation;
     private SparkMAXMotorSim leaderSim;
     private final List<SparkMAXMotorSim> motorSims = new ArrayList<SparkMAXMotorSim>();
 
     public SparkMaxMotorArraySim(List<SparkBaseMotorChannels> channels, Designation designation, boolean isInverted) {
-        super(channels, isInverted);
-        this.designation = designation;
+        super(channels, isInverted, designation);
 
         for (SparkMAXMotor motor : this.motors) {
             if (leaderSim == null) {
@@ -27,10 +22,6 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
             }
         }
     }
-
-    // public void setSpeeds(double metersPerSecond, double feedforward) {
-    // super.setSpeeds(metersPerSecond, feedforward);
-    // }
 
     @Override
     public void simulationPeriodic(double velocity, double distance) {
@@ -49,13 +40,9 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
         leader.setSpeeds(metersPerSecond, feedforward);
     }
 
-    @Override
-    public void setDistance(double position) {
-        leaderSim.setDistance(position);
-    }
+    // @Override
+    // public void setDistance(double position) {
+    //     leaderSim.setDistance(position);
+    // }
 
-    public enum Designation {
-        Left,
-        Right
-    }
 }

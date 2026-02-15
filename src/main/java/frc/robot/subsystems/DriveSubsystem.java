@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.studica.frc.AHRS;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,7 +34,7 @@ import frc.robot.abstractions.ISparkMaxMotorArray;
 import frc.robot.classes.SparkBaseMotorChannels;
 import frc.robot.classes.SparkMaxMotorArray;
 import frc.robot.classes.SparkMaxMotorArraySim;
-import frc.robot.classes.SparkMaxMotorArraySim.Designation;
+import frc.robot.classes.Designation;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -45,6 +46,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrivetrainSim m_drivetrainSim;
 
   private final AHRS m_gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);
+  PIDController headingController = new PIDController(1.25, 0.0, 1.75);
 
   private final DifferentialDriveOdometry m_odometry;
   private final DifferentialDriveKinematics kinematics;
@@ -69,11 +71,12 @@ public class DriveSubsystem extends SubsystemBase {
       m_leftMotor = new SparkMaxMotorArraySim(leftChannels, Designation.Left, false);
       m_rightMotor = new SparkMaxMotorArraySim(rightChannels, Designation.Right, true);
     } else {
-      m_leftMotor = new SparkMaxMotorArray(leftChannels, false);
-      m_rightMotor = new SparkMaxMotorArray(rightChannels, true);
+      m_leftMotor = new SparkMaxMotorArray(leftChannels, false, Designation.Left);
+      m_rightMotor = new SparkMaxMotorArray(rightChannels, true, Designation.Right);
     }
 
     driveTrain = new DifferentialDrive(m_leftMotor.getLeader().motor, m_rightMotor.getLeader().motor);
+
     kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(21.5));
     m_drivetrainSim = new DifferentialDrivetrainSim(DCMotor.getNEO(2), 15, .5, 1, Units.inchesToMeters(2),
         Units.inchesToMeters(4), null);
@@ -97,20 +100,29 @@ public class DriveSubsystem extends SubsystemBase {
     double xSpeedDelivered = leftSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = rightSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     // double rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
-    var chassisSpeeds = new ChassisSpeeds(leftSpeed, rightSpeed, 0);
+
+    DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);
+    ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
     // Convert to wheel speeds
 
-    DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
     // m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
     // m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
     driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+
+    headingController.enableContinuousInput(-Math.PI, Math.PI);
+
   }
 
   public void updateOdometry() {
     double leftDistance = m_leftMotor.getDistance();
     double rightDistance = m_rightMotor.getDistance();
+
+    // m_odometry.update(
+    //     m_gyro.getRotation2d(), leftDistance, rightDistance);
+
+    
     m_odometry.update(
-        m_gyro.getRotation2d(), leftDistance, rightDistance);
+      m_drivetrainSim.getHeading(), leftDistance, rightDistance);
   }
 
   @Override
@@ -135,15 +147,22 @@ public class DriveSubsystem extends SubsystemBase {
     double leftVelocity = m_drivetrainSim.getLeftVelocityMetersPerSecond();
     double leftDistance = m_drivetrainSim.getLeftPositionMeters();
 
-    
-    double rightVelocity = m_drivetrainSim.getLeftVelocityMetersPerSecond();
-    double rightDistance = m_drivetrainSim.getLeftPositionMeters();
+    double rightVelocity = m_drivetrainSim.getRightVelocityMetersPerSecond();
+    double rightDistance = m_drivetrainSim.getRightPositionMeters();
+
     m_leftMotor.simulationPeriodic(leftVelocity, leftDistance);
     m_rightMotor.simulationPeriodic(rightVelocity, rightDistance);
 
-    updateOdometry();
+    // updateOdometry();
+    // m_field.setRobotPose(m_odometry.getPoseMeters());
+    // publisher.set(m_odometry.getPoseMeters());  double leftDistance = m_leftMotor.getDistance();
 
-    m_field.setRobotPose(m_odometry.getPoseMeters());
-    publisher.set(m_odometry.getPoseMeters());
+
+    // m_odometry.update(
+    //     m_gyro.getRotation2d(), leftDistance, rightDistance);
+
+    
+    m_odometry.update(
+      m_drivetrainSim.getHeading(), leftDistance, rightDistance);
   }
 }

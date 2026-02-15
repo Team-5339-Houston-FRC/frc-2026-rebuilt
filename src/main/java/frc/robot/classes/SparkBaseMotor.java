@@ -4,7 +4,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public abstract class SparkBaseMotor<T extends SparkBase> {
@@ -23,25 +22,26 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         motor = CreateMotor(config);
         pidController = motor.getClosedLoopController();
         encoder = motor.getEncoder();
-        //encoder.setDistancePerPulse(config.distancePerPulse);
     }
 
-    public SparkBaseMotor(int channelA, int channelB, boolean isInverted, double distancePerPulse) {
+    public SparkBaseMotor(int channelA, int channelB, boolean isInverted,
+            double distancePerPulse, Designation designation) {
         this(new SparkBaseMotorConfig<T>(
                 new SparkBaseMotorChannels(channelA, channelB),
-                isInverted, distancePerPulse));
+                isInverted, distancePerPulse, designation));
     }
 
-    public SparkBaseMotor(int channelA, int channelB, boolean isInverted) {
+    public SparkBaseMotor(int channelA, int channelB,
+            boolean isInverted, Designation designation) {
         this(new SparkBaseMotorConfig<T>(
                 new SparkBaseMotorChannels(channelA, channelB),
-                isInverted));
+                isInverted, designation));
     }
 
-    public SparkBaseMotor(SparkBaseMotorChannels channels, boolean isInverted) {
+    public SparkBaseMotor(SparkBaseMotorChannels channels, boolean isInverted, Designation designation) {
         this(new SparkBaseMotorConfig<T>(
                 new SparkBaseMotorChannels(channels.channelA, channels.channelB),
-                isInverted));
+                isInverted, designation));
     }
 
     protected abstract T CreateMotor(int channel, boolean isInverted);
@@ -59,6 +59,7 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
     public void setVoltage(double voltage) {
         motor.setVoltage(voltage);
     }
+
     public void setSpeeds(double metersPerSecond, double feedforward) {
         // double output = pidController.calculate(encoder.getRate(), metersPerSecond);
         // motor.setVoltage(output + feedforward);
@@ -91,6 +92,8 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         SmartDashboard.putNumber(path + "Current", motor.getOutputCurrent());
         SmartDashboard.putNumber(path + "BusVoltage", motor.getBusVoltage());
         SmartDashboard.putNumber(path + "Voltage", getVoltage());
+        SmartDashboard.putBoolean(path + "IsInverted", config.isInverted);
+        SmartDashboard.putString(path + "Designation", config.designation.toString());
     }
 
 }

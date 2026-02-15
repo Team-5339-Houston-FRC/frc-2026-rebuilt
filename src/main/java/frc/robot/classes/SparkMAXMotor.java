@@ -3,7 +3,6 @@ package frc.robot.classes;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -13,12 +12,12 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> {
 
     }
     
-    public SparkMAXMotor(int channelA, int channelB, boolean isInverted) {
-        super(channelA, channelB, isInverted);
+    public SparkMAXMotor(int channelA, int channelB, boolean isInverted, Designation designation) {
+        super(channelA, channelB, isInverted, designation);
     }
 
-    public SparkMAXMotor(SparkBaseMotorChannels channels, boolean isInverted) {
-        super(channels, isInverted);
+    public SparkMAXMotor(SparkBaseMotorChannels channels, boolean isInverted, Designation designation) {
+        super(channels, isInverted, designation);
     }
 
     public SparkMAXMotor(SparkBaseMotorConfig<SparkMax> config) {
@@ -45,7 +44,7 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> {
         motor.configure(sparkMaxConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         return motor;
     }
-    
+
     @Override
     public void setSpeeds(double metersPerSecond, double feedforward) {
       super.setSpeeds(metersPerSecond, feedforward);

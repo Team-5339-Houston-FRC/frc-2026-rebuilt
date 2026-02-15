@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FuelConstants;
+import frc.robot.classes.Designation;
 import frc.robot.classes.SparkMAXMotor;
 
 public class FuelSubsystem extends SubsystemBase {
@@ -9,8 +10,8 @@ public class FuelSubsystem extends SubsystemBase {
     private final SparkMAXMotor m_secondaryMotor;
 
     public FuelSubsystem() {
-        m_primaryMotor = new SparkMAXMotor(FuelConstants.primaryChannelA, FuelConstants.primaryChannelB, false);
-        m_secondaryMotor = new SparkMAXMotor(FuelConstants.secondaryChannelA, FuelConstants.secondaryChannelB, false);
+        m_primaryMotor = new SparkMAXMotor(FuelConstants.primaryChannelA, FuelConstants.primaryChannelB, false, Designation.Primary);
+        m_secondaryMotor = new SparkMAXMotor(FuelConstants.secondaryChannelA, FuelConstants.secondaryChannelB, false, Designation.Secondary);
     }
 
     public void intake() {

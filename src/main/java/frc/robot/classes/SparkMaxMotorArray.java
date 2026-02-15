@@ -8,7 +8,6 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import frc.robot.abstractions.ISparkMaxMotorArray;
-import frc.robot.classes.SparkMaxMotorArraySim.Designation;
 
 public class SparkMaxMotorArray implements ISparkMaxMotorArray {
 
@@ -19,11 +18,11 @@ public class SparkMaxMotorArray implements ISparkMaxMotorArray {
 
     }
 
-    public SparkMaxMotorArray(List<SparkBaseMotorChannels> channels, boolean isInverted) {
+    public SparkMaxMotorArray(List<SparkBaseMotorChannels> channels, boolean isInverted, Designation designation) {
         SparkMAXMotor leader = null;
         for (SparkBaseMotorChannels channel : channels) {
             SparkBaseMotorConfig<SparkMax> config = new SparkBaseMotorConfig<SparkMax>(channel, isInverted,
-                    0, leader);
+                    0, designation, leader);
             SparkMAXMotor motor = new SparkMAXMotor(config);
             if (leader == null) {
                 leader = motor;
