@@ -33,7 +33,6 @@ public class RobotContainer {
   @SuppressWarnings("unused")
   private final ClimberSubsystem m_climberSub = new ClimberSubsystem();
   public final DriveSubsystem m_driveSub = new DriveSubsystem();
-  @SuppressWarnings("unused")
   private final FuelSubsystem m_fuelSub = new FuelSubsystem();
   @SuppressWarnings("unused")
   private final VisionSubsystem m_visionSub = new VisionSubsystem();
