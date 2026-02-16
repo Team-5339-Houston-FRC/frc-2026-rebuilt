@@ -49,4 +49,8 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> {
     public void setSpeeds(double metersPerSecond, double feedforward) {
       super.setSpeeds(metersPerSecond, feedforward);
     }
+
+    public double getVelocity() {
+        return encoder.getVelocity();
+    }
 }

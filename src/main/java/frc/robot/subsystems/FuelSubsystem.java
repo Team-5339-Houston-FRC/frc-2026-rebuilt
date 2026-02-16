@@ -21,7 +21,9 @@ public class FuelSubsystem extends SubsystemBase {
 
     public void shoot() {
         m_primaryMotor.setVelocity(FuelConstants.maxSpeed);
-        m_secondaryMotor.setVelocity(-1*FuelConstants.maxSpeed);
+        if (m_primaryMotor.getVelocity() > FuelConstants.maxSpeed * FuelConstants.shootingThresholdPercent) {
+            m_secondaryMotor.setVelocity(-1*FuelConstants.maxSpeed);
+        }
     }
 
     //decolonize but balls
