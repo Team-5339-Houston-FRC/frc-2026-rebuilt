@@ -99,20 +99,21 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(double leftSpeed, double rightSpeed) {
-    double leftFeedforward = m_feedforward.calculate(leftSpeed);
+    double leftFeedforward = m_feedforward.calculate(leftSpeed)
+    ;
     double rightFeedforward = m_feedforward.calculate(rightSpeed);
 
     // figure out what to do with these values
     // double xSpeedDelivered = leftSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     // double ySpeedDelivered = rightSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
 
-    DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);
+    DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftFeedforward, rightFeedforward);
     ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
     // Convert to wheel speeds
 
-    // m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
-    // m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
-    driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+    m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
+     m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
+    //driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
 
     headingController.enableContinuousInput(-Math.PI, Math.PI);
 

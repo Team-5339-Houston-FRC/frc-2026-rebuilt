@@ -56,10 +56,10 @@ public class RobotContainer {
         // drive
         new RunCommand(
             () -> m_driveSub.drive(
-                -MathUtil.applyDeadband(m_controller.getRawAxis(0), OperatorConstants.kDriveDeadband)
-                    * Constants.driveMultiplier,
-                -MathUtil.applyDeadband(m_controller.getRawAxis(1), OperatorConstants.kDriveDeadband)
-                    * Constants.driveMultiplier),
+                (-MathUtil.applyDeadband(m_controller.getRawAxis(1), OperatorConstants.kDriveDeadband)) * Constants.driveMultiplier
+                    ,
+                (-MathUtil.applyDeadband(m_controller.getRawAxis(5), OperatorConstants.kDriveDeadband)) * Constants.driveMultiplier
+                    ),
             m_driveSub));
   }
 
