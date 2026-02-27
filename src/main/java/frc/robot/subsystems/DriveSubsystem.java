@@ -111,18 +111,18 @@ public class DriveSubsystem extends SubsystemBase {
     driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
 
     headingController.enableContinuousInput(-Math.PI, Math.PI);
-    m_leftMotor.setSpeeds(speeds.leftMetersPerSecond, leftFeedforward);
-    m_rightMotor.setSpeeds(speeds.rightMetersPerSecond, rightFeedforward);
+    //m_leftMotor.setSpeeds(speeds.leftMetersPerSecond, leftFeedforward);
+    //m_rightMotor.setSpeeds(speeds.rightMetersPerSecond, rightFeedforward);
   }
 
   public void drive(double leftSpeed, double rightSpeed) {
-    double leftFeedforward = m_feedforward.calculate(leftSpeed)
-    ;
+    double leftFeedforward = m_feedforward.calculate(leftSpeed);
     double rightFeedforward = m_feedforward.calculate(rightSpeed);
 
     // figure out what to do with these values
     // double xSpeedDelivered = leftSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    // double ySpeedDelivered = rightSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    // double ySpeedDelivered = rightSpeed *
+    // DriveConstants.kMaxSpeedMetersPerSecond;
 
     DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftFeedforward,
         -1 * rightFeedforward);
@@ -131,8 +131,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     // double xSpeed = chassisSpeeds.vxMetersPerSecond;
 
-    m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
-    m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
+    //m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
+    //m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
     driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
 
     headingController.enableContinuousInput(-Math.PI, Math.PI);

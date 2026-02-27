@@ -54,16 +54,21 @@ public class RobotContainer {
     m_driveSub.setDefaultCommand(
         // left stick controls left side of robot, right stick controls right side; tank
         // drive
-
         new RunCommand(
-            () -> m_driveSub.drive(
-                -MathUtil.applyDeadband(m_controller.getRawAxis(0),
-                    OperatorConstants.kDriveDeadband)
-                    * Constants.driveMultiplier,
-                -MathUtil.applyDeadband(m_controller.getRawAxis(1),
-                    OperatorConstants.kDriveDeadband)
-                    * Constants.driveMultiplier),
+            () -> m_driveSub.drive(m_controller.getRawAxis(0)
+                * Constants.driveMultiplier,
+                m_controller.getRawAxis(1) * Constants.driveMultiplier),
             m_driveSub));
+
+    // new RunCommand(
+    // () -> m_driveSub.drive(
+    // -MathUtil.applyDeadband(m_controller.getRawAxis(0),
+    // OperatorConstants.kDriveDeadband)
+    // * Constants.driveMultiplier,
+    // -MathUtil.applyDeadband(m_controller.getRawAxis(1),
+    // OperatorConstants.kDriveDeadband)
+    // * Constants.driveMultiplier),
+    // m_driveSub));
   }
 
   /**
