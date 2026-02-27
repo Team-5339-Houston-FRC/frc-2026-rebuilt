@@ -30,7 +30,6 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
         double deltaRotations = rotationsPerSecond * deltaTime;
 
         SparkMAXMotor leader = motors.get(0);
-        double voltage = 12 * velocity;
         setDistance(distance);
         leaderSim.simulationPeriodic(velocity, 12, deltaRotations);
     }

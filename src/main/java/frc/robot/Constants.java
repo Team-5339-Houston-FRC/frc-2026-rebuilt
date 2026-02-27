@@ -22,7 +22,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static double driveMultiplier = .5;
+  public static double driveMultiplier = .1;
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
