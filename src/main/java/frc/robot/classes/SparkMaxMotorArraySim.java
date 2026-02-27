@@ -5,13 +5,15 @@ import java.util.List;
 
 public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
 
+    private final double maxSpeed;
     private SparkMAXMotorSim leaderSim;
     private final List<SparkMAXMotorSim> motorSims = new ArrayList<SparkMAXMotorSim>();
 
     public SparkMaxMotorArraySim(String subsystem, List<SparkBaseMotorChannels> channels, Designation designation,
-            boolean isInverted) {
+            boolean isInverted, double maxSpeed) {
         super(subsystem, channels, isInverted, designation);
 
+        this.maxSpeed = maxSpeed;
         for (SparkMAXMotor motor : this.motors) {
             if (leaderSim == null) {
                 leaderSim = new SparkMAXMotorSim(motor);
@@ -25,7 +27,7 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
 
     @Override
     public void simulationPeriodic(double velocity, double distance) {
-        double rotationsPerSecond = 1500 / 60.0;
+        double rotationsPerSecond = this.maxSpeed / 60.0;
         double deltaTime = 0.02; // 20ms loop
         double deltaRotations = rotationsPerSecond * deltaTime;
 

@@ -74,8 +74,8 @@ public class DriveSubsystem extends SubsystemBase {
         new SparkBaseMotorChannels(6));
 
     if (Robot.isSimulation()) {
-      m_leftMotor = new SparkMaxMotorArraySim("Drive", leftChannels, Designation.Left, false);
-      m_rightMotor = new SparkMaxMotorArraySim("Drive", rightChannels, Designation.Right, true);
+      m_leftMotor = new SparkMaxMotorArraySim("Drive", leftChannels, Designation.Left, false, DriveConstants.kMaxSpeedMetersPerSecond);
+      m_rightMotor = new SparkMaxMotorArraySim("Drive", rightChannels, Designation.Right, true, DriveConstants.kMaxSpeedMetersPerSecond);
     } else {
       m_leftMotor = new SparkMaxMotorArray("Drive", leftChannels, false, Designation.Left);
       m_rightMotor = new SparkMaxMotorArray("Drive", rightChannels, true, Designation.Right);

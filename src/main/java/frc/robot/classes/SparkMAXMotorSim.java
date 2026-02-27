@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.hal.SimDevice.Direction;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -51,7 +52,8 @@ public class SparkMAXMotorSim implements ISparkMaxMotor {
         // simMotor.getRelativeEncoderSim().setVelocity(deltaVelocity);
 
         // Optionally simulate current draw
-        simMotor.setBusVoltage(12.0);
+        simMotor.setAppliedOutput(appliedOutput);
+        
         simMotor.iterate(deltaVelocity, vbus, dt);
         record();
     }
@@ -88,7 +90,7 @@ public class SparkMAXMotorSim implements ISparkMaxMotor {
     // }
 
     public void setVelocity(double velocity) {
-        motor.setVoltage(12);
+        //motor.setVoltage(12);
         motor.setVelocity(velocity);
         simMotor.setVelocity(velocity);
     }

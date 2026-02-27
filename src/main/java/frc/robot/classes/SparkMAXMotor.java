@@ -6,7 +6,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import frc.robot.abstractions.ISparkMaxMotor;
 
 public class SparkMAXMotor extends SparkBaseMotor<SparkMax> implements ISparkMaxMotor {

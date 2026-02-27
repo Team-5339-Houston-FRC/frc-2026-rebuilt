@@ -36,21 +36,21 @@ public class FuelSubsystem extends SubsystemBase {
     }
 
     public void intake() {
-        m_primaryMotor.setVelocity(FuelConstants.maxSpeed);
-        m_secondaryMotor.setVelocity(FuelConstants.maxSpeed);
+        m_primaryMotor.setVelocity(FuelConstants.kMaxSpeedMetersPerSecond);
+        m_secondaryMotor.setVelocity(FuelConstants.kMaxSpeedMetersPerSecond);
     }
 
     public void shoot() {
-        m_primaryMotor.setVelocity(FuelConstants.maxSpeed);
-        if (m_primaryMotor.getVelocity() > FuelConstants.maxSpeed * FuelConstants.shootingThresholdPercent) {
-            m_secondaryMotor.setVelocity(-1 * FuelConstants.maxSpeed);
+        m_primaryMotor.setVelocity(FuelConstants.kMaxSpeedMetersPerSecond);
+        if (m_primaryMotor.getVelocity() > FuelConstants.kMaxSpeedMetersPerSecond * FuelConstants.shootingThresholdPercent) {
+            m_secondaryMotor.setVelocity(-1 * FuelConstants.kMaxSpeedMetersPerSecond);
         }
     }
 
     // decolonize but balls
     public void deballonize() {
-        m_primaryMotor.setVelocity(-1 * FuelConstants.maxSpeed);
-        m_secondaryMotor.setVelocity(-1 * FuelConstants.maxSpeed);
+        m_primaryMotor.setVelocity(-1 * FuelConstants.kMaxSpeedMetersPerSecond);
+        m_secondaryMotor.setVelocity(-1 * FuelConstants.kMaxSpeedMetersPerSecond);
     }
 
     public void stop() {
@@ -60,7 +60,7 @@ public class FuelSubsystem extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        double rotationsPerSecond = 1500 / 60.0;
+        double rotationsPerSecond = FuelConstants.kMaxSpeedMetersPerSecond / 60.0;
         double deltaTime = 0.02; // 20ms loop
         double deltaRotations = rotationsPerSecond * deltaTime;
         double velocity = m_primaryMotor.getVelocity();

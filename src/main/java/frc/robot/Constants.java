@@ -27,7 +27,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 1.0;
+    public static final double kMaxSpeedMetersPerSecond = 1500.0;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     // Chassis configuration
@@ -135,7 +135,7 @@ public final class Constants {
     public static final int primaryChannelB = 9;
     public static final int secondaryChannelA = 10;
     public static final int secondaryChannelB = 11;
-    public static final int maxSpeed = 1500;
+    public static final int kMaxSpeedMetersPerSecond = 1;
     public static final double shootingThresholdPercent = 0.9;
   }
 }

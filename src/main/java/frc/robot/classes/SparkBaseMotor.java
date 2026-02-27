@@ -61,7 +61,7 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
 
     // set the motor's speed
     public void setVelocity(double speed) {
-        double motorSpeed = speed / FuelConstants.maxSpeed;//RPM Value Scaled to -1->1
+        double motorSpeed = speed / FuelConstants.kMaxSpeedMetersPerSecond;//RPM Value Scaled to -1->1
         pidController.setSetpoint(motorSpeed, ControlType.kVelocity);
         motor.set(motorSpeed * velocityCoefficient);
     }
