@@ -7,19 +7,25 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
+import frc.robot.abstractions.ISparkMaxMotor;
 
-public class SparkMAXMotor extends SparkBaseMotor<SparkMax> {
+public class SparkMAXMotor extends SparkBaseMotor<SparkMax> implements ISparkMaxMotor {
 
     public SparkMAXMotor() {
 
     }
-    
-    public SparkMAXMotor(int channelA, int channelB, boolean isInverted, Designation designation) {
-        super(channelA, channelB, isInverted, designation);
+
+    public SparkMAXMotor(String subsystem, int channelA, boolean isInverted, Designation designation) {
+        super(subsystem,
+                new SparkBaseMotorChannels(channelA),
+                isInverted, designation);
     }
 
-    public SparkMAXMotor(SparkBaseMotorChannels channels, boolean isInverted, Designation designation) {
-        super(channels, isInverted, designation);
+    public SparkMAXMotor(String subsystem, SparkBaseMotorChannels channels, boolean isInverted,
+            Designation designation) {
+        super(subsystem,
+                channels,
+                isInverted, designation);
     }
 
     public SparkMAXMotor(SparkBaseMotorConfig<SparkMax> config) {
@@ -48,12 +54,11 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> {
         return motor;
     }
 
-    @Override
-    public void setSpeeds(double metersPerSecond, double feedforward) {
-      //super.setSpeeds(metersPerSecond, feedforward);
-    }
-
     public double getVelocity() {
         return encoder.getVelocity();
+    }
+
+    public void simulationPeriodic(double velocity, double vbus, double dt) {
+
     }
 }

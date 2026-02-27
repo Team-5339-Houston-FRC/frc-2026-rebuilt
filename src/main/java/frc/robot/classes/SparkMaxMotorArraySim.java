@@ -8,8 +8,9 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
     private SparkMAXMotorSim leaderSim;
     private final List<SparkMAXMotorSim> motorSims = new ArrayList<SparkMAXMotorSim>();
 
-    public SparkMaxMotorArraySim(List<SparkBaseMotorChannels> channels, Designation designation, boolean isInverted) {
-        super(channels, isInverted, designation);
+    public SparkMaxMotorArraySim(String subsystem, List<SparkBaseMotorChannels> channels, Designation designation,
+            boolean isInverted) {
+        super(subsystem, channels, isInverted, designation);
 
         for (SparkMAXMotor motor : this.motors) {
             if (leaderSim == null) {
@@ -27,6 +28,7 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
         double rotationsPerSecond = 1500 / 60.0;
         double deltaTime = 0.02; // 20ms loop
         double deltaRotations = rotationsPerSecond * deltaTime;
+
         SparkMAXMotor leader = motors.get(0);
         double voltage = 12 * velocity;
         setDistance(distance);
@@ -36,13 +38,8 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
     @Override
     public void setSpeeds(double metersPerSecond, double feedforward) {
         super.setSpeeds(metersPerSecond, feedforward);
-        SparkMAXMotor leader = motors.get(0);
-        leader.setSpeeds(metersPerSecond, feedforward);
+        //SparkMAXMotor leader = motors.get(0);
+        //leader.setSpeeds(metersPerSecond, feedforward);
     }
-
-    // @Override
-    // public void setDistance(double position) {
-    // leaderSim.setDistance(position);
-    // }
 
 }
