@@ -6,6 +6,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
+
 public class SparkMAXMotor extends SparkBaseMotor<SparkMax> {
 
     public SparkMAXMotor() {
@@ -27,6 +29,7 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> {
     @Override
     protected SparkMax CreateMotor(int channel, boolean isInverted) {
         SparkMax motor = new SparkMax(channel, MotorType.kBrushless);
+        motor.set(channel);
         SparkMaxConfig config = new SparkMaxConfig();
         config.inverted(isInverted);
         motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);

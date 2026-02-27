@@ -55,11 +55,14 @@ public class RobotContainer {
     m_driveSub.setDefaultCommand(
         // left stick controls left side of robot, right stick controls right side; tank
         // drive
+
         new RunCommand(
             () -> m_driveSub.drive(
-                -MathUtil.applyDeadband(m_controller.getRawAxis(0), OperatorConstants.kDriveDeadband)
+                -MathUtil.applyDeadband(m_controller.getRawAxis(0),
+                    OperatorConstants.kDriveDeadband)
                     * Constants.driveMultiplier,
-                -MathUtil.applyDeadband(m_controller.getRawAxis(1), OperatorConstants.kDriveDeadband)
+                -MathUtil.applyDeadband(m_controller.getRawAxis(1),
+                    OperatorConstants.kDriveDeadband)
                     * Constants.driveMultiplier),
             m_driveSub));
   }
@@ -84,13 +87,13 @@ public class RobotContainer {
     // to make a new binding: m_controller.a().onTrue(new YourCommandHere());
     // a() could be replaced with any other button
     m_controller.leftBumper()
-      .whileTrue(new intake(m_fuelSub));
+        .whileTrue(new intake(m_fuelSub));
     m_controller.rightBumper()
-      .whileTrue(new deballonize(m_fuelSub));
+        .whileTrue(new deballonize(m_fuelSub));
     m_controller.rightTrigger(.7)
-      .whileTrue(new shoot(m_fuelSub, m_driveSub));
+        .whileTrue(new shoot(m_fuelSub, m_driveSub));
     m_controller.x()
-      .onTrue(new stopFuel(m_fuelSub));
+        .onTrue(new stopFuel(m_fuelSub));
   }
 
   /**

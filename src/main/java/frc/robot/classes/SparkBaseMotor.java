@@ -12,6 +12,7 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
     protected RelativeEncoder encoder;
     protected SparkClosedLoopController pidController;
     protected SparkBaseMotorConfig<T> config;
+    private int velocityCoefficient = 1;
 
     public SparkBaseMotor() {
 
@@ -20,8 +21,13 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
     public SparkBaseMotor(SparkBaseMotorConfig<T> config) {
         this.config = config;
         motor = CreateMotor(config);
+        motor.setVoltage(12);
         pidController = motor.getClosedLoopController();
         encoder = motor.getEncoder();
+
+        if (config.isInverted) {
+            velocityCoefficient = -1;
+        }
     }
 
     public SparkBaseMotor(int channelA, int channelB, boolean isInverted,
@@ -64,17 +70,17 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         // double output = pidController.calculate(encoder.getRate(), metersPerSecond);
         // motor.setVoltage(output + feedforward);
         pidController.setSetpoint(metersPerSecond, ControlType.kVelocity);
-        pidController.setSetpoint(1, ControlType.kPosition);
+        //pidController.setSetpoint(1, ControlType.kPosition);
         motor.setVoltage(12);
-        motor.set(metersPerSecond);
+        motor.set(metersPerSecond * velocityCoefficient);
     }
 
     // set the motor's speed
     public void setVelocity(double speed) {
-        pidController.setSetpoint(speed, ControlType.kVelocity);
-        pidController.setSetpoint(0, ControlType.kPosition);
+        pidController.setSetpoint(speed * 1500, ControlType.kVelocity);
+        //pidController.setSetpoint(0, ControlType.kPosition);
         motor.setVoltage(12);
-        motor.set(speed);
+        motor.set(speed * velocityCoefficient);
     }
 
     public double getDistance() {
