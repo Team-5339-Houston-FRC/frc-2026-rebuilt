@@ -116,14 +116,15 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void drive(double leftSpeed, double rightSpeed) {
-    double leftFeedforward = m_feedforward.calculate(leftSpeed);
+    double leftFeedforward = m_feedforward.calculate(leftSpeed)
+    ;
     double rightFeedforward = m_feedforward.calculate(rightSpeed);
 
-    double xSpeedDelivered = leftSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedDelivered = rightSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    // double rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
+    // figure out what to do with these values
+    // double xSpeedDelivered = leftSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    // double ySpeedDelivered = rightSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
 
-    DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftFeedforward * 5,
+    DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftFeedforward,
         -1 * rightFeedforward);
     ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
     // Convert to wheel speeds
