@@ -50,7 +50,7 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> {
 
     @Override
     public void setSpeeds(double metersPerSecond, double feedforward) {
-      super.setSpeeds(metersPerSecond, feedforward);
+      //super.setSpeeds(metersPerSecond, feedforward);
     }
 
     public double getVelocity() {

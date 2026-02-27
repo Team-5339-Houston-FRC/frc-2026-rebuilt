@@ -15,7 +15,7 @@ public class SparkMAXMotorSim {
     private SparkMAXMotor motor;
     private final boolean isInverted;
     private final Designation designation;
-  private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
+    private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
     public SparkMAXMotorSim(int channelA, int channelB, boolean isInverted, Designation designation) {
         motor = new SparkMAXMotor(channelA, channelB, isInverted, designation);

@@ -6,10 +6,10 @@ import com.revrobotics.spark.SparkBase;
 public class SparkBaseMotorConfig<T extends SparkBase> {
     public boolean isInverted;
     public SparkBaseMotorChannels channels;
-    public double distancePerPulse = 5;
+    public double distancePerPulse = .1;
     public SparkBaseMotor<T> leader;
     public Designation designation;
-    public static final double defaultDistancePerPulse = 5;
+    public static final double defaultDistancePerPulse = .1;
 
     public SparkBaseMotorConfig(SparkBaseMotorChannels channels,
             boolean isInverted,

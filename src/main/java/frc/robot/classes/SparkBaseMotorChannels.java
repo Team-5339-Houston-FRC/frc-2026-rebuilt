@@ -7,5 +7,9 @@ public class SparkBaseMotorChannels {
     public SparkBaseMotorChannels(int channelA, int channelB) {
         this.channelA = channelA;
         this.channelB = channelB;
+    } 
+    
+    public SparkBaseMotorChannels(int channelA) {
+        this.channelA = channelA;
     }
 }

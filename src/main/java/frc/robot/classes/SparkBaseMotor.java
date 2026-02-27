@@ -63,24 +63,26 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
     }
 
     public void setVoltage(double voltage) {
-        motor.setVoltage(voltage);
+         motor.setVoltage(voltage);
     }
 
     public void setSpeeds(double metersPerSecond, double feedforward) {
         // double output = pidController.calculate(encoder.getRate(), metersPerSecond);
         // motor.setVoltage(output + feedforward);
-        pidController.setSetpoint(metersPerSecond, ControlType.kVelocity);
-        //pidController.setSetpoint(1, ControlType.kPosition);
-        motor.setVoltage(12);
-        motor.set(metersPerSecond * velocityCoefficient);
+        // pidController.setSetpoint(metersPerSecond, ControlType.kVelocity);
+        // pidController.setSetpoint(1, ControlType.kPosition);
+        // motor.setVoltage(12);
+
+        // motor.set(metersPerSecond * velocityCoefficient);
     }
 
     // set the motor's speed
     public void setVelocity(double speed) {
-        pidController.setSetpoint(speed * 1500, ControlType.kVelocity);
-        //pidController.setSetpoint(0, ControlType.kPosition);
-        motor.setVoltage(12);
-        motor.set(speed * velocityCoefficient);
+        pidController.setSetpoint(speed, ControlType.kVelocity);
+        // pidController.setSetpoint(0, ControlType.kPosition);
+
+        // motor.setVoltage(12);
+        // motor.set(speed * velocityCoefficient);
     }
 
     public double getDistance() {
