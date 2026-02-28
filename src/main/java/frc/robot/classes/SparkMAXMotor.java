@@ -15,12 +15,14 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> implements ISparkMax
     }
 
     public SparkMAXMotor(String subsystem, int channelA, boolean isInverted, Designation designation) {
-        super(subsystem,
+        this(subsystem,
                 new SparkBaseMotorChannels(channelA),
                 isInverted, designation);
     }
 
-    public SparkMAXMotor(String subsystem, SparkBaseMotorChannels channels, boolean isInverted,
+    public SparkMAXMotor(String subsystem,
+            SparkBaseMotorChannels channels,
+            boolean isInverted,
             Designation designation) {
         super(subsystem,
                 channels,
@@ -32,19 +34,11 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> implements ISparkMax
     }
 
     @Override
-    protected SparkMax CreateMotor(int channel, boolean isInverted) {
-        SparkMax motor = new SparkMax(channel, MotorType.kBrushless);
-        SparkMaxConfig config = new SparkMaxConfig();
-        config.inverted(isInverted);
-        motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        return motor;
-    }
-
-    @Override
     protected SparkMax CreateMotor(SparkBaseMotorConfig<SparkMax> config) {
         SparkMax motor = new SparkMax(config.channels.channelA, MotorType.kBrushless);
         SparkMaxConfig sparkMaxConfig = new SparkMaxConfig();
         sparkMaxConfig.inverted(config.isInverted);
+        
         if (config.leader != null) {
             sparkMaxConfig.follow(config.leader.motor);
         }
@@ -52,11 +46,7 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> implements ISparkMax
         return motor;
     }
 
-    public double getVelocity() {
-        return encoder.getVelocity();
-    }
-
-    public void simulationPeriodic(double velocity, double vbus, double dt) {
+    public void simulationPeriodic(double velocity) {
 
     }
 }

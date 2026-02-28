@@ -6,7 +6,7 @@ public interface ISparkMaxMotor {
 
     double getVelocity();
 
-    void simulationPeriodic(double velocity, double vbus, double dt);
+    void simulationPeriodic(double velocity);
 
     double getAppliedOutput();
 }

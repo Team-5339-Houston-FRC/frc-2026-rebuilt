@@ -13,16 +13,17 @@ public class SparkMaxMotorArray implements ISparkMaxMotorArray {
 
     protected final List<SparkMAXMotor> motors = new ArrayList<SparkMAXMotor>();
     public double distance;
+    private SparkMAXMotor leader;
 
     public SparkMaxMotorArray() {
 
     }
 
-    public SparkMaxMotorArray(String subsystem, 
-    List<SparkBaseMotorChannels> channels, boolean isInverted,
+    public SparkMaxMotorArray(String subsystem,
+            List<SparkBaseMotorChannels> channels, 
+            boolean isInverted,
             Designation designation) {
-        SparkMAXMotor leader = null;
-        
+
         for (SparkBaseMotorChannels channel : channels) {
             SparkBaseMotorConfig<SparkMax> config = new SparkBaseMotorConfig<SparkMax>(subsystem, channel, isInverted,
                     designation, leader);
@@ -35,17 +36,14 @@ public class SparkMaxMotorArray implements ISparkMaxMotorArray {
     }
 
     public double getDistance() {
-        SparkMAXMotor leader = motors.get(0);
         return leader.getDistance();
     }
 
     public SparkMAXMotor getLeader() {
-        SparkMAXMotor leader = motors.get(0);
         return leader;
     }
 
     public double getVoltage() {
-        SparkMAXMotor leader = motors.get(0);
         return leader.getVoltage();
     }
 
@@ -53,12 +51,11 @@ public class SparkMaxMotorArray implements ISparkMaxMotorArray {
         distance = position;
     }
 
-    public void simulationPeriodic(double velocity, double distance) {
-
+    public void setVelocity(double velocity) {
+        leader.setVelocity(velocity);
     }
 
-    public void setSpeeds(double metersPerSecond, double feedforward) {
-        // SparkMAXMotor leader = motors.get(0);
-        // leader.setSpeeds(metersPerSecond, feedforward);
+    public void simulationPeriodic(double velocity) {
+
     }
 }

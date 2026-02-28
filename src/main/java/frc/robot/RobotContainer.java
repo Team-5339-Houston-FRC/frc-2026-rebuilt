@@ -16,6 +16,8 @@ import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -38,8 +40,8 @@ public class RobotContainer {
     @SuppressWarnings("unused")
     private final VisionSubsystem m_visionSub = new VisionSubsystem();
 
-    //@SuppressWarnings("unused")
-    //private final PDH m_pdh = new PDH();
+    // @SuppressWarnings("unused")
+    // private final PDH m_pdh = new PDH();
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController m_controller = new CommandXboxController(
@@ -63,10 +65,10 @@ public class RobotContainer {
 
                 new RunCommand(
                         () -> m_driveSub.drive(
-                                MathUtil.applyDeadband(m_controller.getRawAxis(0),
+                                -MathUtil.applyDeadband(m_controller.getLeftY(),
                                         OperatorConstants.kDriveDeadband)
                                         * Constants.driveMultiplier,
-                                -MathUtil.applyDeadband(m_controller.getRawAxis(1),
+                                -MathUtil.applyDeadband(m_controller.getRightY(),
                                         OperatorConstants.kDriveDeadband)
                                         * Constants.driveMultiplier),
                         m_driveSub));
@@ -88,26 +90,26 @@ public class RobotContainer {
      */
     private void configureBindings() {
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        //to make a new binding: m_controller.a().onTrue(new YourCommandHere());
+        // to make a new binding: m_controller.a().onTrue(new YourCommandHere());
 
-        //a() could be replaced with any other button
+        // a() could be replaced with any other button
         m_controller.leftBumper()
-        .whileTrue(new intake(m_fuelSub));
+                .whileTrue(new intake(m_fuelSub));
         m_controller.rightBumper()
-        .whileTrue(new deballonize(m_fuelSub));
+                .whileTrue(new deballonize(m_fuelSub));
         m_controller.rightTrigger(.7)
-        .whileTrue(new shoot(m_fuelSub, m_driveSub));
+                .whileTrue(new shoot(m_fuelSub, m_driveSub));
         m_controller.x()
-        .onTrue(new stopFuel(m_fuelSub));
+                .onTrue(new stopFuel(m_fuelSub));
 
         // m_controller.button(4)
-        //         .whileTrue(new intake(m_fuelSub));
+        // .whileTrue(new intake(m_fuelSub));
         // m_controller.button(1)
-        //         .whileTrue(new deballonize(m_fuelSub));
+        // .whileTrue(new deballonize(m_fuelSub));
         // m_controller.button(2)
-        //         .whileTrue(new shoot(m_fuelSub, m_driveSub));
+        // .whileTrue(new shoot(m_fuelSub, m_driveSub));
         // m_controller.button(3)
-        //         .onTrue(new stopFuel(m_fuelSub));
+        // .onTrue(new stopFuel(m_fuelSub));
     }
 
     /**

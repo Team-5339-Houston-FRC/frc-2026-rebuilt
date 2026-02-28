@@ -74,8 +74,10 @@ public class DriveSubsystem extends SubsystemBase {
         new SparkBaseMotorChannels(21));
 
     if (Robot.isSimulation()) {
-      m_leftMotor = new SparkMaxMotorArraySim("Drive", leftChannels, Designation.Left, false, DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
-      m_rightMotor = new SparkMaxMotorArraySim("Drive", rightChannels, Designation.Right, true, DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
+      m_leftMotor = new SparkMaxMotorArraySim("Drive", leftChannels, Designation.Left, false,
+          DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
+      m_rightMotor = new SparkMaxMotorArraySim("Drive", rightChannels, Designation.Right, true,
+          DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
     } else {
       m_leftMotor = new SparkMaxMotorArray("Drive", leftChannels, false, Designation.Left);
       m_rightMotor = new SparkMaxMotorArray("Drive", rightChannels, true, Designation.Right);
@@ -99,7 +101,8 @@ public class DriveSubsystem extends SubsystemBase {
     double rightFeedforward = m_feedforward.calculate(rightSpeed);
 
     // figure out what to do with these values
-    // double xSpeedDelivered = leftSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    // double xSpeedDelivered = leftSpeed *
+    // DriveConstants.kMaxSpeedMetersPerSecond;
     // double ySpeedDelivered = rightSpeed *
     // DriveConstants.kMaxSpeedMetersPerSecond;
     DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(
@@ -109,7 +112,13 @@ public class DriveSubsystem extends SubsystemBase {
     // ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
     // m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
     // m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
-    driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, true);
+    if (Math.abs(leftSpeed) == 0 && Math.abs(rightSpeed) == 0) {
+      driveTrain.stopMotor();
+      m_rightMotor.setVelocity(0);
+      m_leftMotor.setVelocity(0);
+    } else {
+      driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, true);
+    }
     headingController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
@@ -123,7 +132,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
     updateOdometry();
     m_field.setRobotPose(m_odometry.getPoseMeters());
     publisher.set(m_odometry.getPoseMeters());
@@ -131,7 +139,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    // This method will be called once per scheduler run Dduring simulation
     m_drivetrainSim.setInputs(
         m_leftMotor.getVoltage() * RobotController.getInputVoltage(),
         m_rightMotor.getVoltage() * RobotController.getInputVoltage());
@@ -140,13 +147,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_drivetrainSim.update(0.02);
 
     double leftVelocity = m_drivetrainSim.getLeftVelocityMetersPerSecond();
-    double leftDistance = m_drivetrainSim.getLeftPositionMeters();
-
     double rightVelocity = m_drivetrainSim.getRightVelocityMetersPerSecond();
-    double rightDistance = m_drivetrainSim.getRightPositionMeters();
 
-    m_leftMotor.simulationPeriodic(leftVelocity, leftDistance);
-    m_rightMotor.simulationPeriodic(rightVelocity, rightDistance);
+    m_leftMotor.simulationPeriodic(leftVelocity);
+    m_rightMotor.simulationPeriodic(rightVelocity);
 
     updateOdometry();
   }

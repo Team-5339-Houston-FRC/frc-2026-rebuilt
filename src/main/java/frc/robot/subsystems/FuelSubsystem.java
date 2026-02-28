@@ -8,8 +8,7 @@ import frc.robot.classes.Designation;
 import frc.robot.classes.SparkBaseMotorChannels;
 import frc.robot.classes.SparkFLEXMotor;
 import frc.robot.classes.SparkFLEXMotorSim;
-import frc.robot.classes.SparkMAXMotor;
-import frc.robot.classes.SparkMAXMotorSim;
+
 public class FuelSubsystem extends SubsystemBase {
     private ISparkMaxMotor m_primaryMotor;
     private ISparkMaxMotor m_secondaryMotor;
@@ -18,7 +17,8 @@ public class FuelSubsystem extends SubsystemBase {
         if (Robot.isSimulation()) {
             m_primaryMotor = new SparkFLEXMotorSim("Fuel", new SparkBaseMotorChannels(FuelConstants.primaryChannelA),
                     false, Designation.Primary, FuelConstants.kMaxVoltgage, FuelConstants.kMaxSpeedMetersPerSecond);
-            m_secondaryMotor = new SparkFLEXMotorSim("Fuel", new SparkBaseMotorChannels(FuelConstants.secondaryChannelA),
+            m_secondaryMotor = new SparkFLEXMotorSim("Fuel",
+                    new SparkBaseMotorChannels(FuelConstants.secondaryChannelA),
                     false, Designation.Secondary, FuelConstants.kMaxVoltgage, FuelConstants.kMaxSpeedMetersPerSecond);
         } else {
             m_primaryMotor = new SparkFLEXMotor("Fuel", FuelConstants.primaryChannelA,
@@ -41,15 +41,16 @@ public class FuelSubsystem extends SubsystemBase {
 
     public void shoot() {
         m_primaryMotor.setVelocity(FuelConstants.kMaxSpeedMetersPerSecond);
-        if (m_primaryMotor.getVelocity() > FuelConstants.kMaxSpeedMetersPerSecond * FuelConstants.shootingThresholdPercent) {
-            m_secondaryMotor.setVelocity(-1 * FuelConstants.kMaxSpeedMetersPerSecond);
+        if (m_primaryMotor.getVelocity() > FuelConstants.kMaxSpeedMetersPerSecond
+                * FuelConstants.shootingThresholdPercent) {
+            m_secondaryMotor.setVelocity(FuelConstants.kMaxSpeedMetersPerSecond);
         }
     }
 
-    // decolonize but balls
+    //ball outfeed - empty hopper
     public void deballonize() {
-        m_primaryMotor.setVelocity(-1 * FuelConstants.kMaxSpeedMetersPerSecond);
-        m_secondaryMotor.setVelocity(-1 * FuelConstants.kMaxSpeedMetersPerSecond);
+        m_primaryMotor.setVelocity(FuelConstants.kMaxSpeedMetersPerSecond);
+        m_secondaryMotor.setVelocity(-FuelConstants.kMaxSpeedMetersPerSecond);
     }
 
     public void stop() {
@@ -59,12 +60,9 @@ public class FuelSubsystem extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        double rotationsPerSecond = 25;//FuelConstants.kMaxSpeedMetersPerSecond / 60.0;
-        double deltaTime = 0.02; // 20ms loop
-        double deltaRotations = rotationsPerSecond * deltaTime;
         double velocity = m_primaryMotor.getVelocity();
 
-        m_primaryMotor.simulationPeriodic(velocity, FuelConstants.kMaxVoltgage, deltaRotations);
-        m_secondaryMotor.simulationPeriodic(velocity, FuelConstants.kMaxVoltgage, deltaRotations);
+        m_primaryMotor.simulationPeriodic(velocity);
+        m_secondaryMotor.simulationPeriodic(velocity);
     }
 }

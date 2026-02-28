@@ -2,7 +2,6 @@ package frc.robot.classes;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FuelConstants;
@@ -22,7 +21,6 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
     public SparkBaseMotor(SparkBaseMotorConfig<T> config) {
         this.config = config;
         motor = CreateMotor(config);
-        //motor.setVoltage(12);
         pidController = motor.getClosedLoopController();
         encoder = motor.getEncoder();
 
@@ -38,8 +36,6 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
                 new SparkBaseMotorChannels(channels.channelA, channels.channelB),
                 isInverted, designation));
     }
-
-    protected abstract T CreateMotor(int channel, boolean isInverted);
 
     protected abstract T CreateMotor(SparkBaseMotorConfig<T> config);
 
@@ -59,25 +55,36 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         motor.setVoltage(voltage);
     }
 
-    // set the motor's speed
     public void setVelocity(double speed) {
-        double motorSpeed = speed / FuelConstants.kMaxSpeedMetersPerSecond;//RPM Value Scaled to -1->1
-        pidController.setSetpoint(motorSpeed, ControlType.kVelocity);
-        motor.set(motorSpeed * velocityCoefficient);
+        double motorSpeed = velocityCoefficient * (speed / FuelConstants.kMaxSpeedMetersPerSecond);// RPM Value Scaled
+                                                                                                   // to -1->1
+        if (Math.abs(motorSpeed) == 0) {
+            motorSpeed = 0;
+            motor.setVoltage(0);
+            motor.set(motorSpeed);
+            motor.stopMotor();
+        } else {
+            motor.setVoltage(12);
+            motor.set(motorSpeed);
+        }
+        // pidController.setSetpoint(motorSpeed, ControlType.kVelocity);
     }
 
     public double getDistance() {
         return encoder.getPosition();
     }
 
+    public double getVelocity() {
+        return encoder.getVelocity();
+    }
+
     public void record() {
         String subSystem = config.subSystem;
         String name = String.valueOf(config.channels.channelA);
         String path = subSystem + "/" + name + "/";
-        int positionCoefficient = 1; // positionCoefficient();
 
         SmartDashboard.putNumber(path + "Position", encoder.getPosition());
-        SmartDashboard.putNumber(path + "Velocity", positionCoefficient * encoder.getVelocity());
+        SmartDashboard.putNumber(path + "Velocity", encoder.getVelocity());
         SmartDashboard.putNumber(path + "Current", motor.getOutputCurrent());
         SmartDashboard.putNumber(path + "BusVoltage", motor.getBusVoltage());
         SmartDashboard.putNumber(path + "Voltage", getVoltage());
