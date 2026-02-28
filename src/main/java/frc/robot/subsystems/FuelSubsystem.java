@@ -6,6 +6,8 @@ import frc.robot.Robot;
 import frc.robot.abstractions.ISparkMaxMotor;
 import frc.robot.classes.Designation;
 import frc.robot.classes.SparkBaseMotorChannels;
+import frc.robot.classes.SparkFLEXMotor;
+import frc.robot.classes.SparkFLEXMotorSim;
 import frc.robot.classes.SparkMAXMotor;
 import frc.robot.classes.SparkMAXMotorSim;
 public class FuelSubsystem extends SubsystemBase {
@@ -14,16 +16,16 @@ public class FuelSubsystem extends SubsystemBase {
 
     public FuelSubsystem() {
         if (Robot.isSimulation()) {
-            m_primaryMotor = new SparkMAXMotorSim("Fuel", new SparkBaseMotorChannels(FuelConstants.primaryChannelA),
+            m_primaryMotor = new SparkFLEXMotorSim("Fuel", new SparkBaseMotorChannels(FuelConstants.primaryChannelA),
                     false, Designation.Primary, FuelConstants.kMaxVoltgage, FuelConstants.kMaxSpeedMetersPerSecond);
-            m_secondaryMotor = new SparkMAXMotorSim("Fuel", new SparkBaseMotorChannels(FuelConstants.secondaryChannelA),
+            m_secondaryMotor = new SparkFLEXMotorSim("Fuel", new SparkBaseMotorChannels(FuelConstants.secondaryChannelA),
                     false, Designation.Secondary, FuelConstants.kMaxVoltgage, FuelConstants.kMaxSpeedMetersPerSecond);
         } else {
-            m_primaryMotor = new SparkMAXMotor("Fuel", FuelConstants.primaryChannelA,
+            m_primaryMotor = new SparkFLEXMotor("Fuel", FuelConstants.primaryChannelA,
                     false,
                     Designation.Primary);
-            m_secondaryMotor = new SparkMAXMotor("Fuel",
-                    FuelConstants.secondaryChannelB,
+            m_secondaryMotor = new SparkFLEXMotor("Fuel",
+                    FuelConstants.secondaryChannelA,
                     false,
                     Designation.Secondary);
         }

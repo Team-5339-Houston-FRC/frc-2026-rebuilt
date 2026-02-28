@@ -132,10 +132,10 @@ public final class Constants {
   }
 
   public static class FuelConstants {
-    public static final int primaryChannelA = 8;
-    public static final int primaryChannelB = 9;
-    public static final int secondaryChannelA = 10;
-    public static final int secondaryChannelB = 11;
+    public static final int primaryChannelA = 30;
+    //public static final int primaryChannelB = 30;
+    public static final int secondaryChannelA = 31;
+    //public static final int secondaryChannelB = 0;
     public static final int kMaxSpeedMetersPerSecond = 500;
     public static final double shootingThresholdPercent = 0.9;
     public static final double kMaxVoltgage = 9;
