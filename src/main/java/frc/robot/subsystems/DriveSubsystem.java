@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.Robot;
 import frc.robot.abstractions.ISparkMaxMotorArray;
 import frc.robot.classes.SparkBaseMotorChannels;
@@ -65,70 +66,59 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     List<SparkBaseMotorChannels> leftChannels = List.of(
-        new SparkBaseMotorChannels(10, 0),
-        new SparkBaseMotorChannels(11, 0));
+        new SparkBaseMotorChannels(0),
+        new SparkBaseMotorChannels(2));
 
     List<SparkBaseMotorChannels> rightChannels = List.of(
-        new SparkBaseMotorChannels(20, 0),
-        new SparkBaseMotorChannels(21, 0));
+        new SparkBaseMotorChannels(4),
+        new SparkBaseMotorChannels(6));
 
     if (Robot.isSimulation()) {
-      m_leftMotor = new SparkMaxMotorArraySim(leftChannels, Designation.Left, false);
-      m_rightMotor = new SparkMaxMotorArraySim(rightChannels, Designation.Right, true);
+      m_leftMotor = new SparkMaxMotorArraySim("Drive", leftChannels, Designation.Left, false, DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
+      m_rightMotor = new SparkMaxMotorArraySim("Drive", rightChannels, Designation.Right, true, DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
     } else {
-      m_leftMotor = new SparkMaxMotorArray(leftChannels, false, Designation.Left);
-      m_rightMotor = new SparkMaxMotorArray(rightChannels, true, Designation.Right);
+      m_leftMotor = new SparkMaxMotorArray("Drive", leftChannels, false, Designation.Left);
+      m_rightMotor = new SparkMaxMotorArray("Drive", rightChannels, true, Designation.Right);
     }
 
     driveTrain = new DifferentialDrive(m_leftMotor.getLeader().motor, m_rightMotor.getLeader().motor);
+    driveTrain.setExpiration(.1);
+    driveTrain.setMaxOutput(1);
+    driveTrain.setDeadband(OperatorConstants.kDriveDeadband);
 
     kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(21.5));
-    m_drivetrainSim = new DifferentialDrivetrainSim(DCMotor.getNEO(2), 15, .5, 1, Units.inchesToMeters(2),
-        Units.inchesToMeters(4), null);
+    m_drivetrainSim = new DifferentialDrivetrainSim(DCMotor.getNEO(2), 7.29, .5, 10, Units.inchesToMeters(3),
+        Units.inchesToMeters(21.5), null);
 
     m_odometry = new DifferentialDriveOdometry(
         m_gyro.getRotation2d(), m_leftMotor.getDistance(), m_rightMotor.getDistance());
   }
 
-  public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
-    double leftFeedforward = m_feedforward.calculate(speeds.leftMetersPerSecond);
-    double rightFeedforward = m_feedforward.calculate(speeds.rightMetersPerSecond);
-
-    m_leftMotor.setSpeeds(speeds.leftMetersPerSecond, leftFeedforward);
-    m_rightMotor.setSpeeds(speeds.rightMetersPerSecond, rightFeedforward);
-  }
-
   public void drive(double leftSpeed, double rightSpeed) {
-    double leftFeedforward = m_feedforward.calculate(leftSpeed)
-    ;
+    double leftFeedforward = m_feedforward.calculate(leftSpeed);
     double rightFeedforward = m_feedforward.calculate(rightSpeed);
 
     // figure out what to do with these values
     // double xSpeedDelivered = leftSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    // double ySpeedDelivered = rightSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    // double ySpeedDelivered = rightSpeed *
+    // DriveConstants.kMaxSpeedMetersPerSecond;
+    DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(
+        leftSpeed,
+        rightSpeed);
 
-    DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftFeedforward, rightFeedforward);
-    ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
-    // Convert to wheel speeds
-
-    m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
-     m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
-    //driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
-
+    // ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
+    // m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
+    // m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
+    driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, true);
     headingController.enableContinuousInput(-Math.PI, Math.PI);
-
   }
 
   public void updateOdometry() {
     double leftDistance = m_leftMotor.getDistance();
     double rightDistance = m_rightMotor.getDistance();
 
-    // m_odometry.update(
-    // m_gyro.getRotation2d(), leftDistance, rightDistance);
-
     m_odometry.update(m_drivetrainSim.getHeading(), leftDistance, rightDistance);
     headingPublisher.set(m_drivetrainSim.getHeading());
-
   }
 
   @Override
@@ -147,7 +137,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightMotor.getVoltage() * RobotController.getInputVoltage());
 
     RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(m_drivetrainSim.getCurrentDrawAmps()));
-
     m_drivetrainSim.update(0.02);
 
     double leftVelocity = m_drivetrainSim.getLeftVelocityMetersPerSecond();
@@ -159,15 +148,6 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftMotor.simulationPeriodic(leftVelocity, leftDistance);
     m_rightMotor.simulationPeriodic(rightVelocity, rightDistance);
 
-    // updateOdometry();
-    // m_field.setRobotPose(m_odometry.getPoseMeters());
-    // publisher.set(m_odometry.getPoseMeters()); double leftDistance =
-    // m_leftMotor.getDistance();
-
-    // m_odometry.update(
-    // m_gyro.getRotation2d(), leftDistance, rightDistance);
-
-    m_odometry.update(
-        m_drivetrainSim.getHeading(), leftDistance, rightDistance);
+    updateOdometry();
   }
 }

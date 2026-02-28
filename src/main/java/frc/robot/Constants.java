@@ -22,18 +22,19 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static double driveMultiplier = 1;
+  public static double driveMultiplier = .1;
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 1.0;
+    public static final double kMaxSpeedMetersPerSecond = 1500.0;
+    public static final double kMaxVoltgage = 9;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(26.5);
+    public static final double kTrackWidth = Units.inchesToMeters(23.5);
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(26.5);
+    public static final double kWheelBase = Units.inchesToMeters(21.5);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -85,7 +86,7 @@ public final class Constants {
 
   public static final class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.1;
+    public static final double kDriveDeadband = 0.01;
   }
 
   public static final class AutoConstants {
@@ -131,11 +132,12 @@ public final class Constants {
   }
 
   public static class FuelConstants {
-    public static final int primaryChannelA = 30;
-    public static final int primaryChannelB = 0;
-    public static final int secondaryChannelA = 31;
-    public static final int secondaryChannelB = 0;
-    public static final int maxSpeed = 1500;
+    public static final int primaryChannelA = 8;
+    public static final int primaryChannelB = 9;
+    public static final int secondaryChannelA = 10;
+    public static final int secondaryChannelB = 11;
+    public static final int kMaxSpeedMetersPerSecond = 500;
     public static final double shootingThresholdPercent = 0.9;
+    public static final double kMaxVoltgage = 9;
   }
 }
