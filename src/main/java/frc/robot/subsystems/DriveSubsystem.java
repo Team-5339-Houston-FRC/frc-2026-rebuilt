@@ -65,12 +65,12 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     List<SparkBaseMotorChannels> leftChannels = List.of(
-        new SparkBaseMotorChannels(0, 1),
-        new SparkBaseMotorChannels(2, 3));
+        new SparkBaseMotorChannels(10, 0),
+        new SparkBaseMotorChannels(11, 0));
 
     List<SparkBaseMotorChannels> rightChannels = List.of(
-        new SparkBaseMotorChannels(4, 5),
-        new SparkBaseMotorChannels(6, 7));
+        new SparkBaseMotorChannels(20, 0),
+        new SparkBaseMotorChannels(21, 0));
 
     if (Robot.isSimulation()) {
       m_leftMotor = new SparkMaxMotorArraySim(leftChannels, Designation.Left, false);

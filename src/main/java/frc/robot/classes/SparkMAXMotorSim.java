@@ -44,7 +44,7 @@ public class SparkMAXMotorSim {
     }
 
     public void simulationPeriodic(double velocity, double vbus, double dt) {
-        simMotor.iterate(velocity, vbus, dt);
+        simMotor.iterate(velocity, 12, dt);
         record();
     }
 
