@@ -8,9 +8,6 @@ import frc.robot.classes.Designation;
 import frc.robot.classes.SparkBaseMotorChannels;
 import frc.robot.classes.SparkMAXMotor;
 import frc.robot.classes.SparkMAXMotorSim;
-import frc.robot.classes.SparkMaxMotorArray;
-import frc.robot.classes.SparkMaxMotorArraySim;
-
 public class FuelSubsystem extends SubsystemBase {
     private ISparkMaxMotor m_primaryMotor;
     private ISparkMaxMotor m_secondaryMotor;
@@ -18,9 +15,9 @@ public class FuelSubsystem extends SubsystemBase {
     public FuelSubsystem() {
         if (Robot.isSimulation()) {
             m_primaryMotor = new SparkMAXMotorSim("Fuel", new SparkBaseMotorChannels(FuelConstants.primaryChannelA),
-                    false, Designation.Primary);
+                    false, Designation.Primary, FuelConstants.kMaxVoltgage, FuelConstants.kMaxSpeedMetersPerSecond);
             m_secondaryMotor = new SparkMAXMotorSim("Fuel", new SparkBaseMotorChannels(FuelConstants.secondaryChannelA),
-                    false, Designation.Secondary);
+                    false, Designation.Secondary, FuelConstants.kMaxVoltgage, FuelConstants.kMaxSpeedMetersPerSecond);
         } else {
             m_primaryMotor = new SparkMAXMotor("Fuel", FuelConstants.primaryChannelA,
                     false,
@@ -60,12 +57,12 @@ public class FuelSubsystem extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        double rotationsPerSecond = FuelConstants.kMaxSpeedMetersPerSecond / 60.0;
+        double rotationsPerSecond = 25;//FuelConstants.kMaxSpeedMetersPerSecond / 60.0;
         double deltaTime = 0.02; // 20ms loop
         double deltaRotations = rotationsPerSecond * deltaTime;
         double velocity = m_primaryMotor.getVelocity();
 
-        m_primaryMotor.simulationPeriodic(velocity, 12, deltaRotations);
-        m_secondaryMotor.simulationPeriodic(velocity, 12, deltaRotations);
+        m_primaryMotor.simulationPeriodic(velocity, FuelConstants.kMaxVoltgage, deltaRotations);
+        m_secondaryMotor.simulationPeriodic(velocity, FuelConstants.kMaxVoltgage, deltaRotations);
     }
 }

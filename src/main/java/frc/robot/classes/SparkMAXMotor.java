@@ -34,7 +34,6 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> implements ISparkMax
     @Override
     protected SparkMax CreateMotor(int channel, boolean isInverted) {
         SparkMax motor = new SparkMax(channel, MotorType.kBrushless);
-        motor.set(channel);
         SparkMaxConfig config = new SparkMaxConfig();
         config.inverted(isInverted);
         motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);

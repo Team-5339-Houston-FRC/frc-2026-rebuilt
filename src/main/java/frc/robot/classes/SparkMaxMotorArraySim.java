@@ -10,16 +10,16 @@ public class SparkMaxMotorArraySim extends SparkMaxMotorArray {
     private final List<SparkMAXMotorSim> motorSims = new ArrayList<SparkMAXMotorSim>();
 
     public SparkMaxMotorArraySim(String subsystem, List<SparkBaseMotorChannels> channels, Designation designation,
-            boolean isInverted, double maxSpeed) {
+            boolean isInverted, double maxSpeed, double maxVoltage) {
         super(subsystem, channels, isInverted, designation);
 
         this.maxSpeed = maxSpeed;
         for (SparkMAXMotor motor : this.motors) {
             if (leaderSim == null) {
-                leaderSim = new SparkMAXMotorSim(motor);
+                leaderSim = new SparkMAXMotorSim(motor, maxVoltage, maxSpeed);
                 motorSims.add(leaderSim);
             } else {
-                SparkMAXMotorSim follower = new SparkMAXMotorSim(motor);
+                SparkMAXMotorSim follower = new SparkMAXMotorSim(motor, maxVoltage, maxSpeed);
                 motorSims.add(follower);
             }
         }
