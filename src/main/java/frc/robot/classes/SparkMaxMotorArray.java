@@ -22,11 +22,11 @@ public class SparkMaxMotorArray implements ISparkMaxMotorArray {
     public SparkMaxMotorArray(String subsystem,
             List<SparkBaseMotorChannels> channels, 
             boolean isInverted,
-            Designation designation) {
+            Designation designation, double maxSpeed, double maxVoltage) {
 
         for (SparkBaseMotorChannels channel : channels) {
             SparkBaseMotorConfig<SparkMax> config = new SparkBaseMotorConfig<SparkMax>(subsystem, channel, isInverted,
-                    designation, leader);
+                    designation, maxSpeed, maxVoltage);
             SparkMAXMotor motor = new SparkMAXMotor(config);
             if (leader == null) {
                 leader = motor;

@@ -79,8 +79,8 @@ public class DriveSubsystem extends SubsystemBase {
       m_rightMotor = new SparkMaxMotorArraySim("Drive", rightChannels, Designation.Right, true,
           DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
     } else {
-      m_leftMotor = new SparkMaxMotorArray("Drive", leftChannels, false, Designation.Left);
-      m_rightMotor = new SparkMaxMotorArray("Drive", rightChannels, true, Designation.Right);
+      m_leftMotor = new SparkMaxMotorArray("Drive", leftChannels, false, Designation.Left, DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
+      m_rightMotor = new SparkMaxMotorArray("Drive", rightChannels, true, Designation.Right, DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
     }
 
     driveTrain = new DifferentialDrive(m_leftMotor.getLeader().motor, m_rightMotor.getLeader().motor);

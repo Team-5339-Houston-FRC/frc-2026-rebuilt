@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FuelConstants;
 import frc.robot.Robot;
 import frc.robot.abstractions.ISparkMaxMotor;
@@ -23,11 +24,11 @@ public class FuelSubsystem extends SubsystemBase {
         } else {
             m_primaryMotor = new SparkFLEXMotor("Fuel", FuelConstants.primaryChannelA,
                     false,
-                    Designation.Primary);
+                    Designation.Primary, FuelConstants.kMaxSpeedMetersPerSecond, FuelConstants.kMaxVoltgage);
             m_secondaryMotor = new SparkFLEXMotor("Fuel",
                     FuelConstants.secondaryChannelA,
                     false,
-                    Designation.Secondary);
+                    Designation.Secondary, FuelConstants.kMaxSpeedMetersPerSecond, FuelConstants.kMaxVoltgage);
         }
 
         m_primaryMotor.setVelocity(0);

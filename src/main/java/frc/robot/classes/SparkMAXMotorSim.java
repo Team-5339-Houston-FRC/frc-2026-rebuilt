@@ -28,12 +28,7 @@ public class SparkMAXMotorSim implements ISparkMaxMotor {
     public SparkMAXMotorSim(String subsystem, SparkBaseMotorChannels channels,
             boolean isInverted,
             Designation designation, double maxVoltage, double maxSpeed) {
-        this(subsystem, new SparkMAXMotor(subsystem, channels, isInverted, designation), maxVoltage, maxSpeed);
-    }
-
-    public static SparkMAXMotorSim CreateSparkMAXMotorSim(String subsystem, SparkBaseMotorChannels channels,
-            boolean isInverted, Designation designation, double maxVoltage, double maxSpeed) {
-        return new SparkMAXMotorSim(subsystem, channels, isInverted, designation, maxVoltage, maxSpeed);
+        this(subsystem, new SparkMAXMotor(subsystem, channels, isInverted, designation, maxSpeed, maxVoltage), maxVoltage, maxSpeed);
     }
 
     public void simulationPeriodic(double velocity) {

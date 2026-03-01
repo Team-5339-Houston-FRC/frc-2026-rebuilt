@@ -1,11 +1,7 @@
 package frc.robot.classes;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
-
 import frc.robot.abstractions.ISparkMaxMotor;
 
 public class SparkMAXMotor extends SparkBaseMotor<SparkMax> implements ISparkMaxMotor {
@@ -14,19 +10,20 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> implements ISparkMax
 
     }
 
-    public SparkMAXMotor(String subsystem, int channelA, boolean isInverted, Designation designation) {
+    public SparkMAXMotor(String subsystem, int channelA, boolean isInverted,
+     Designation designation, double maxSpeed, double maxVoltage) {
         this(subsystem,
                 new SparkBaseMotorChannels(channelA),
-                isInverted, designation);
+                isInverted, designation, maxSpeed, maxVoltage);
     }
 
     public SparkMAXMotor(String subsystem,
             SparkBaseMotorChannels channels,
             boolean isInverted,
-            Designation designation) {
+            Designation designation, double maxSpeed, double maxVoltage) {
         super(subsystem,
                 channels,
-                isInverted, designation);
+                isInverted, designation, maxSpeed, maxVoltage);
     }
 
     public SparkMAXMotor(SparkBaseMotorConfig<SparkMax> config) {
@@ -36,13 +33,6 @@ public class SparkMAXMotor extends SparkBaseMotor<SparkMax> implements ISparkMax
     @Override
     protected SparkMax CreateMotor(SparkBaseMotorConfig<SparkMax> config) {
         SparkMax motor = new SparkMax(config.channels.channelA, MotorType.kBrushless);
-        SparkMaxConfig sparkMaxConfig = new SparkMaxConfig();
-        sparkMaxConfig.inverted(config.isInverted);
-        
-        if (config.leader != null) {
-            sparkMaxConfig.follow(config.leader.motor);
-        }
-        motor.configure(sparkMaxConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         return motor;
     }
 

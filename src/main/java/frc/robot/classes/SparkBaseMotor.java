@@ -1,8 +1,14 @@
 package frc.robot.classes;
 
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FuelConstants;
 
@@ -27,14 +33,24 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
         if (config.isInverted) {
             velocityCoefficient = -1;
         }
+
+        SparkMaxConfig sparkMaxConfig = new SparkMaxConfig();
+        sparkMaxConfig.inverted(config.isInverted);
+
+        if (config.leader != null) {
+            sparkMaxConfig.follow(config.leader.motor);
+        }
+
+        motor.configure(sparkMaxConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+
     }
 
     public SparkBaseMotor(String subsystem, SparkBaseMotorChannels channels, boolean isInverted,
-            Designation designation) {
+            Designation designation, double maxSpeed, double maxVoltage) {
         this(new SparkBaseMotorConfig<T>(
                 subsystem,
                 new SparkBaseMotorChannels(channels.channelA, channels.channelB),
-                isInverted, designation));
+                isInverted, designation, maxSpeed, maxVoltage));
     }
 
     protected abstract T CreateMotor(SparkBaseMotorConfig<T> config);

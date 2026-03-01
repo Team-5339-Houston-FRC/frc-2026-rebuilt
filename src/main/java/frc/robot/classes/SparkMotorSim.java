@@ -1,50 +1,63 @@
 package frc.robot.classes;
 
 import com.revrobotics.sim.SparkFlexSim;
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkSim;
+import com.revrobotics.spark.config.SparkBaseConfig;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.abstractions.ISparkMaxMotor;
 
-public class SparkFLEXMotorSim implements ISparkMaxMotor {
+public abstract class SparkMotorSim<TMotor extends SparkBase, TMotorSim extends SparkSim> implements ISparkMaxMotor {
 
     private double maxSpeed;
     private double maxVoltage;
     private String subsystem;
-    private SparkFlexSim simMotor;
-    private SparkFLEXMotor motor;
-    private final boolean isInverted;
-    private final Designation designation;
+    private TMotorSim simMotor;
+    private SparkBaseMotor<TMotor> motor;
+    private boolean isInverted;
+    private Designation designation;
 
-    public SparkFLEXMotorSim(String subsystem, SparkFLEXMotor motor, double maxVoltage, double maxSpeed) {
-        simMotor = new SparkFlexSim(motor.motor, DCMotor.getNEO(1));
+    public SparkMotorSim(SparkBaseMotor<TMotor> motor, TMotorSim motorSim, SparkBaseMotorConfig<TMotor> config) {
+        this.simMotor = motorSim;
         this.motor = motor;
-        this.isInverted = motor.config.isInverted;
-        this.designation = motor.config.designation;
-        this.maxVoltage = maxVoltage;
-        this.maxSpeed = maxSpeed;
-        this.subsystem = subsystem;
+        configure(config);
     }
 
-    public SparkFLEXMotorSim(String subsystem, SparkBaseMotorChannels channels,
+    private void configure(SparkBaseMotorConfig<TMotor> config) {
+        this.isInverted = config.isInverted;
+        this.designation = config.designation;
+        this.maxVoltage = config.maxVoltage;
+        this.maxSpeed = config.maxSpeed;
+        this.subsystem = config.subSystem;
+    }
+
+    protected abstract SparkBaseMotor<TMotor> CreateMotor(SparkBaseMotorConfig<TMotor> config);
+
+    protected abstract TMotorSim CreateMotorSim(SparkBaseMotorConfig<TMotor> config);
+
+    public SparkMotorSim(String subsystem, SparkBaseMotorChannels channels,
             boolean isInverted,
             Designation designation, double maxVoltage, double maxSpeed) {
-
-        this(subsystem,
-                new SparkFLEXMotor(subsystem, channels, isInverted, designation, maxSpeed, maxVoltage),
+        SparkBaseMotorConfig<TMotor> config = new SparkBaseMotorConfig<TMotor>(
+                subsystem,
+                new SparkBaseMotorChannels(channels.channelA, channels.channelB),
+                isInverted, designation,
                 maxVoltage,
                 maxSpeed);
-    }
 
-    public static SparkMAXMotorSim CreateSparkMAXMotorSim(String subsystem, SparkBaseMotorChannels channels,
-            boolean isInverted, Designation designation, double maxVoltage, double maxSpeed) {
-        return new SparkMAXMotorSim(subsystem, channels, isInverted, designation, maxVoltage, maxSpeed);
+        this.simMotor = CreateMotorSim(config);
+        this.motor = CreateMotor(config);
+        configure(config);
+
     }
 
     public void simulationPeriodic(double velocity) {
         double appliedOutput = motor.getAppliedOutput(); // -1.0 to 1.0
-        double deltaVelocity = appliedOutput * maxSpeed; 
+        double deltaVelocity = appliedOutput * maxSpeed;
 
-        //Apply simulated values
+        // Apply simulated values
         // simMotor.getRelativeEncoderSim().setPosition(motor.getDistance() + 5);
         // simMotor.getRelativeEncoderSim().setVelocity(deltaVelocity);
 
