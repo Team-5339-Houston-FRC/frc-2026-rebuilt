@@ -4,6 +4,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -72,7 +73,7 @@ public abstract class SparkBaseMotor<T extends SparkBase> {
     }
 
     public void setVelocity(double speed) {
-        double motorSpeed = velocityCoefficient * (speed / FuelConstants.kMaxSpeedMetersPerSecond);// RPM Value Scaled
+        double motorSpeed = velocityCoefficient * (speed / config.maxSpeed);// RPM Value Scaled
                                                                                                    // to -1->1
         if (Math.abs(motorSpeed) == 0) {
             motorSpeed = 0;
