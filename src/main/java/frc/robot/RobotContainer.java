@@ -13,7 +13,7 @@ import frc.robot.commands.stopFuel;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FuelSubsystem;
-import frc.robot.subsystems.MarqueeSubsystem;
+import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -48,7 +48,7 @@ public class RobotContainer {
 
         @SuppressWarnings("unused")
         private final ClimberSubsystem m_climberSub = new ClimberSubsystem();
-        private final MarqueeSubsystem m_marqueeSub = new MarqueeSubsystem(marqueeSubscriber);
+        private final LightsSubsystem m_marqueeSub = new LightsSubsystem(marqueeSubscriber);
         public final DriveSubsystem m_driveSub = new DriveSubsystem(marqueePublisher);
         private final FuelSubsystem m_fuelSub = new FuelSubsystem(marqueePublisher);
         @SuppressWarnings("unused")

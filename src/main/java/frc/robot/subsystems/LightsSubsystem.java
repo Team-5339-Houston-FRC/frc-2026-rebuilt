@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.LEDs;
 
-public class MarqueeSubsystem extends SubsystemBase {
+public class LightsSubsystem extends SubsystemBase {
 
     private final String subsystem = "Marquee";
     private final StringSubscriber marqueeSubscriber;
     private PWMSparkMax led;
 
-    public MarqueeSubsystem(StringSubscriber marqueeSubscriber) {
+    public LightsSubsystem(StringSubscriber marqueeSubscriber) {
         this.marqueeSubscriber = marqueeSubscriber;
         led = new PWMSparkMax(LEDs.k_PWMId);
     }
