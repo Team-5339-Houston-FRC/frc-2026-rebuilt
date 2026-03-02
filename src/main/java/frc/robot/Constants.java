@@ -128,7 +128,7 @@ public final class Constants {
   }
 
   public static class LEDs {
-    public static final int k_PWMId = 9;
+    public static final int k_PWMId = 0;
     public static final int k_totalLength = 1;
   }
 
