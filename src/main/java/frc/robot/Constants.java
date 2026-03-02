@@ -22,13 +22,13 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static double driveMultiplier = .1;
+  public static double driveMultiplier = .5;
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 1500.0;
-    public static final double kMaxVoltgage = 9;
+    public static final double kMaxVoltgage = 12;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     // Chassis configuration

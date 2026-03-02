@@ -1,11 +1,7 @@
 package frc.robot.classes;
 
-import com.revrobotics.sim.SparkFlexSim;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkSim;
-import com.revrobotics.spark.config.SparkBaseConfig;
-
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.abstractions.ISparkMaxMotor;
 
@@ -35,11 +31,12 @@ public abstract class SparkMotorSim<TMotor extends SparkBase, TMotorSim extends 
 
     protected abstract SparkBaseMotor<TMotor> CreateMotor(SparkBaseMotorConfig<TMotor> config);
 
-    protected abstract TMotorSim CreateMotorSim(SparkBaseMotorConfig<TMotor> config);
+    protected abstract TMotorSim CreateMotorSim(SparkBaseMotor<TMotor> motor, SparkBaseMotorConfig<TMotor> config);
 
     public SparkMotorSim(String subsystem, SparkBaseMotorChannels channels,
             boolean isInverted,
             Designation designation, double maxVoltage, double maxSpeed) {
+
         SparkBaseMotorConfig<TMotor> config = new SparkBaseMotorConfig<TMotor>(
                 subsystem,
                 new SparkBaseMotorChannels(channels.channelA, channels.channelB),
@@ -47,10 +44,9 @@ public abstract class SparkMotorSim<TMotor extends SparkBase, TMotorSim extends 
                 maxVoltage,
                 maxSpeed);
 
-        this.simMotor = CreateMotorSim(config);
         this.motor = CreateMotor(config);
+        this.simMotor = CreateMotorSim(this.motor, config);
         configure(config);
-
     }
 
     public void simulationPeriodic(double velocity) {
@@ -85,9 +81,11 @@ public abstract class SparkMotorSim<TMotor extends SparkBase, TMotorSim extends 
         String path = subSystem + "/" + name + "/";
         SmartDashboard.putNumber(path + "Position", simMotor.getRelativeEncoderSim().getPosition());
         SmartDashboard.putNumber(path + "Velocity", simMotor.getRelativeEncoderSim().getVelocity());
+        SmartDashboard.putNumber(path + "MaxVelocity", this.maxSpeed);
         SmartDashboard.putNumber(path + "Current", simMotor.getMotorCurrent());
         SmartDashboard.putNumber(path + "BusVoltage", simMotor.getBusVoltage());
         SmartDashboard.putNumber(path + "Voltage", getVoltage());
+        SmartDashboard.putNumber(path + "MaxVoltage", this.maxVoltage);
         SmartDashboard.putBoolean(path + "IsInverted", isInverted);
         SmartDashboard.putString(path + "Designation", designation.toString());
     }
