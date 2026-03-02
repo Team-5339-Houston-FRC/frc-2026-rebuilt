@@ -20,25 +20,27 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Robot;
-import frc.robot.abstractions.ISparkMaxMotorArray;
 import frc.robot.classes.SparkBaseMotorChannels;
 import frc.robot.classes.SparkMaxMotorArray;
 import frc.robot.classes.SparkMaxMotorArraySim;
 import frc.robot.classes.Designation;
 
 public class DriveSubsystem extends SubsystemBase {
+
+  private final String subsystem = "Drive";
 
   private final SparkMaxMotorArray m_leftMotor;
   private final SparkMaxMotorArray m_rightMotor;
@@ -48,23 +50,33 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrivetrainSim m_drivetrainSim;
 
   private final AHRS m_gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);
-  PIDController headingController = new PIDController(1.25, 0.0, 1.75);
+
+  private final PIDController headingController = new PIDController(1.25, 0.0, 1.75);
 
   private final DifferentialDriveOdometry m_odometry;
   private final DifferentialDriveKinematics kinematics;
   private final DifferentialDrive driveTrain;
+
   private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1, 3);
 
-  StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault()
+  private final StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault()
       .getStructTopic("Robot Pose", Pose2d.struct)
       .publish();
 
-  StructPublisher<Rotation2d> headingPublisher = NetworkTableInstance.getDefault()
+  private final StructSubscriber<Pose2d> subscriber = NetworkTableInstance.getDefault()
+      .getStructTopic("Robot Pose", Pose2d.struct)
+      .subscribe(null);
+
+  private final StructPublisher<Rotation2d> headingPublisher = NetworkTableInstance.getDefault()
       .getStructTopic("Heading", Rotation2d.struct)
       .publish();
 
+  private final StringPublisher marqueePublisher;
+
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+  public DriveSubsystem(StringPublisher marqueePublisher) {
+    this.marqueePublisher = marqueePublisher;
+
     List<SparkBaseMotorChannels> leftChannels = List.of(
         new SparkBaseMotorChannels(10),
         new SparkBaseMotorChannels(11));
@@ -74,14 +86,14 @@ public class DriveSubsystem extends SubsystemBase {
         new SparkBaseMotorChannels(21));
 
     if (Robot.isSimulation()) {
-      m_leftMotor = new SparkMaxMotorArraySim("Drive", leftChannels, Designation.Left, false,
+      m_leftMotor = new SparkMaxMotorArraySim(subsystem, leftChannels, Designation.Left, false,
           DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
-      m_rightMotor = new SparkMaxMotorArraySim("Drive", rightChannels, Designation.Right, true,
+      m_rightMotor = new SparkMaxMotorArraySim(subsystem, rightChannels, Designation.Right, true,
           DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
     } else {
-      m_leftMotor = new SparkMaxMotorArray("Drive", leftChannels, false, Designation.Left,
+      m_leftMotor = new SparkMaxMotorArray(subsystem, leftChannels, false, Designation.Left,
           DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
-      m_rightMotor = new SparkMaxMotorArray("Drive", rightChannels, true, Designation.Right,
+      m_rightMotor = new SparkMaxMotorArray(subsystem, rightChannels, true, Designation.Right,
           DriveConstants.kMaxSpeedMetersPerSecond, DriveConstants.kMaxVoltgage);
     }
 
@@ -91,6 +103,7 @@ public class DriveSubsystem extends SubsystemBase {
     driveTrain.setDeadband(OperatorConstants.kDriveDeadband);
 
     kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(21.5));
+
     m_drivetrainSim = new DifferentialDrivetrainSim(DCMotor.getNEO(2), 7.29, .5, 10, Units.inchesToMeters(3),
         Units.inchesToMeters(21.5), null);
 
@@ -118,7 +131,9 @@ public class DriveSubsystem extends SubsystemBase {
       driveTrain.stopMotor();
       m_rightMotor.setVelocity(0);
       m_leftMotor.setVelocity(0);
+      marqueePublisher.set("Running");
     } else {
+      marqueePublisher.set("Driving");
       driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, true);
     }
     headingController.enableContinuousInput(-Math.PI, Math.PI);
