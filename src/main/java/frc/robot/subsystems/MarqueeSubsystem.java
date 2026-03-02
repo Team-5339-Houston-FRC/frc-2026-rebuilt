@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LEDs;
 
 public class MarqueeSubsystem extends SubsystemBase {
 
@@ -16,8 +17,8 @@ public class MarqueeSubsystem extends SubsystemBase {
 
     public MarqueeSubsystem(StringSubscriber marqueeSubscriber) {
         this.marqueeSubscriber = marqueeSubscriber;
-        led = new AddressableLED(4);
-        buffer = new AddressableLEDBuffer(1);
+        led = new AddressableLED(LEDs.k_PWMId);
+        buffer = new AddressableLEDBuffer(LEDs.k_totalLength);
     }
 
     @Override

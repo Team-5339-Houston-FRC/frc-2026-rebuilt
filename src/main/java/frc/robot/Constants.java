@@ -22,6 +22,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static double driveMultiplier = .6;
 
   public static final class DriveConstants {
@@ -128,7 +129,7 @@ public final class Constants {
 
   public static class LEDs {
     public static final int k_PWMId = 9;
-    public static final int k_totalLength = 300;
+    public static final int k_totalLength = 1;
   }
 
   public static class FuelConstants {
