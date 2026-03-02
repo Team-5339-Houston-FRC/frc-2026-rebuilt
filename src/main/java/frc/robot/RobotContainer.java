@@ -10,7 +10,6 @@ import frc.robot.commands.deballonize;
 import frc.robot.commands.intake;
 import frc.robot.commands.shoot;
 import frc.robot.commands.stopFuel;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.LightsSubsystem;
@@ -44,14 +43,11 @@ public class RobotContainer {
 
         private final StringSubscriber marqueeSubscriber = NetworkTableInstance.getDefault()
                         .getStringTopic("Marquee Status")
-                        .subscribe("Ready",new PubSubOption[0]);
+                        .subscribe("Ready", new PubSubOption[0]);
 
-        @SuppressWarnings("unused")
-        private final ClimberSubsystem m_climberSub = new ClimberSubsystem();
         private final LightsSubsystem m_marqueeSub = new LightsSubsystem(marqueeSubscriber);
         public final DriveSubsystem m_driveSub = new DriveSubsystem(marqueePublisher);
         private final FuelSubsystem m_fuelSub = new FuelSubsystem(marqueePublisher);
-        @SuppressWarnings("unused")
         private final VisionSubsystem m_visionSub = new VisionSubsystem();
 
         // @SuppressWarnings("unused")
@@ -84,9 +80,9 @@ public class RobotContainer {
                                                                 -MathUtil.applyDeadband(m_controller.getLeftY(),
                                                                                 OperatorConstants.kDriveDeadband)
                                                                                 * Constants.driveMultiplier,
-                                                                -MathUtil.applyDeadband(m_controller.getRightY(),
+                                                                MathUtil.applyDeadband(m_controller.getRightX(),
                                                                                 OperatorConstants.kDriveDeadband)
-                                                                                * Constants.driveMultiplier),
+                                                                                * Constants.rotateMultiplier),
                                                 m_driveSub));
         }
 
