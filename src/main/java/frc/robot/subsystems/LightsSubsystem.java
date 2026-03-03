@@ -91,12 +91,10 @@ public class LightsSubsystem extends SubsystemBase {
         double green = 0;
         double red = 0;
         double blue = 0;
-        double value = 0;
 
         // for (int i = 0; i < buffer.getLength(); i++) {
         // buffer.setLED(i, color);
         // }
-        led.set(value);
 
         SmartDashboard.putNumber(subsystem + "/Color/Red", red);
         SmartDashboard.putNumber(subsystem + "/Color/Green", green);
