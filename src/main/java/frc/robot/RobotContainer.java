@@ -10,10 +10,9 @@ import frc.robot.commands.deballonize;
 import frc.robot.commands.intake;
 import frc.robot.commands.shoot;
 import frc.robot.commands.stopFuel;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FuelSubsystem;
-import frc.robot.subsystems.MarqueeSubsystem;
+import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -44,14 +43,11 @@ public class RobotContainer {
 
         private final StringSubscriber marqueeSubscriber = NetworkTableInstance.getDefault()
                         .getStringTopic("Marquee Status")
-                        .subscribe("Ready",new PubSubOption[0]);
+                        .subscribe("Ready", new PubSubOption[0]);
 
-        @SuppressWarnings("unused")
-        private final ClimberSubsystem m_climberSub = new ClimberSubsystem();
-        private final MarqueeSubsystem m_marqueeSub = new MarqueeSubsystem(marqueeSubscriber);
+        private final LightsSubsystem m_marqueeSub = new LightsSubsystem(marqueeSubscriber);
         public final DriveSubsystem m_driveSub = new DriveSubsystem(marqueePublisher);
         private final FuelSubsystem m_fuelSub = new FuelSubsystem(marqueePublisher);
-        @SuppressWarnings("unused")
         private final VisionSubsystem m_visionSub = new VisionSubsystem();
 
         // @SuppressWarnings("unused")
@@ -87,9 +83,13 @@ public class RobotContainer {
                                                                 -MathUtil.applyDeadband(m_controller.getLeftY(),
                                                                                 OperatorConstants.kDriveDeadband)
                                                                                 * Constants.driveMultiplier,
+<<<<<<< HEAD
                                                                 -MathUtil.applyDeadband(m_controller.getRightX(),
+=======
+                                                                MathUtil.applyDeadband(m_controller.getRightX(),
+>>>>>>> 5aee11ed6be7444ed598fa2250e591423a357af1
                                                                                 OperatorConstants.kDriveDeadband)
-                                                                                * Constants.driveMultiplier),
+                                                                                * Constants.rotateMultiplier),
                                                 m_driveSub));
         }
 

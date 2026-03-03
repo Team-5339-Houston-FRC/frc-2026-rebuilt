@@ -111,9 +111,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_gyro.getRotation2d(), m_leftMotor.getDistance(), m_rightMotor.getDistance());
   }
 
-  public void drive(double leftSpeed, double rightSpeed) {
-    double leftFeedforward = m_feedforward.calculate(leftSpeed);
-    double rightFeedforward = m_feedforward.calculate(rightSpeed);
+  public void drive(double drive, double turn) {
 
     // figure out what to do with these values
     // double xSpeedDelivered = leftSpeed *
@@ -121,20 +119,24 @@ public class DriveSubsystem extends SubsystemBase {
     // double ySpeedDelivered = rightSpeed *
     // DriveConstants.kMaxSpeedMetersPerSecond;
     DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(
-        leftSpeed,
-        rightSpeed);
+        drive,
+        turn);
 
     // ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(wheelSpeeds);
     // m_leftMotor.setSpeeds(wheelSpeeds.leftMetersPerSecond, leftFeedforward);
     // m_rightMotor.setSpeeds(wheelSpeeds.rightMetersPerSecond, rightFeedforward);
-    if (Math.abs(leftSpeed) == 0 && Math.abs(rightSpeed) == 0) {
+    if (Math.abs(drive) == 0 && Math.abs(turn) == 0) {
       driveTrain.stopMotor();
       m_rightMotor.setVelocity(0);
       m_leftMotor.setVelocity(0);
       marqueePublisher.set("Running");
     } else {
       marqueePublisher.set("Driving");
+<<<<<<< HEAD
       driveTrain.arcadeDrive(leftSpeed, rightSpeed);//(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, true);
+=======
+      driveTrain.arcadeDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, true);
+>>>>>>> 5aee11ed6be7444ed598fa2250e591423a357af1
     }
     headingController.enableContinuousInput(-Math.PI, Math.PI);
   }
