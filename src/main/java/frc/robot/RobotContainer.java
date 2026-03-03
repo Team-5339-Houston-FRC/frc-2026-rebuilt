@@ -83,11 +83,7 @@ public class RobotContainer {
                                                                 -MathUtil.applyDeadband(m_controller.getLeftY(),
                                                                                 OperatorConstants.kDriveDeadband)
                                                                                 * Constants.driveMultiplier,
-<<<<<<< HEAD
-                                                                -MathUtil.applyDeadband(m_controller.getRightX(),
-=======
                                                                 MathUtil.applyDeadband(m_controller.getRightX(),
->>>>>>> 5aee11ed6be7444ed598fa2250e591423a357af1
                                                                                 OperatorConstants.kDriveDeadband)
                                                                                 * Constants.rotateMultiplier),
                                                 m_driveSub));

@@ -24,6 +24,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   public static double driveMultiplier = .8;
+  public static double rotateMultiplier = .6;
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of

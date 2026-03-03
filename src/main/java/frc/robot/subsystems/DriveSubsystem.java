@@ -132,11 +132,7 @@ public class DriveSubsystem extends SubsystemBase {
       marqueePublisher.set("Running");
     } else {
       marqueePublisher.set("Driving");
-<<<<<<< HEAD
-      driveTrain.arcadeDrive(leftSpeed, rightSpeed);//(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, true);
-=======
       driveTrain.arcadeDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, true);
->>>>>>> 5aee11ed6be7444ed598fa2250e591423a357af1
     }
     headingController.enableContinuousInput(-Math.PI, Math.PI);
   }
