@@ -51,14 +51,14 @@ public class FuelSubsystem extends SubsystemBase {
         m_primaryMotor.setVelocity(FuelConstants.kMaxSpeedMetersPerSecond);
         if (m_primaryMotor.getVelocity() > FuelConstants.kMaxSpeedMetersPerSecond
                 * FuelConstants.shootingThresholdPercent) {
-            m_secondaryMotor.setVelocity(FuelConstants.kMaxSpeedMetersPerSecond);
+            m_secondaryMotor.setVelocity(-FuelConstants.kMaxSpeedMetersPerSecond);
         }
     }
 
     // ball outfeed - empty hopper
     public void deballonize() {
         marqueePublisher.set("Outfeed");
-        m_primaryMotor.setVelocity(FuelConstants.kMaxSpeedMetersPerSecond);
+        m_primaryMotor.setVelocity(-FuelConstants.kMaxSpeedMetersPerSecond);
         m_secondaryMotor.setVelocity(-FuelConstants.kMaxSpeedMetersPerSecond);
     }
 

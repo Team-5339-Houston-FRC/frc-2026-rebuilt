@@ -5,20 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FuelSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class shoot extends Command {
   private final FuelSubsystem m_fuelSubsystem;
-  private final DriveSubsystem m_driveSubsystem;
 
   /** Creates a new shoot. */
-  public shoot(FuelSubsystem fuelSubsystem, DriveSubsystem driveSubsystem) {
+  public shoot(FuelSubsystem fuelSubsystem) {
     m_fuelSubsystem = fuelSubsystem;
-    m_driveSubsystem = driveSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_fuelSubsystem, m_driveSubsystem);
+    addRequirements(m_fuelSubsystem);
   }
 
   // Called when the command is initially scheduled.

@@ -134,7 +134,7 @@ public class DriveSubsystem extends SubsystemBase {
       marqueePublisher.set("Running");
     } else {
       marqueePublisher.set("Driving");
-      driveTrain.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, true);
+      driveTrain.arcadeDrive(leftSpeed, rightSpeed);//(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond, true);
     }
     headingController.enableContinuousInput(-Math.PI, Math.PI);
   }

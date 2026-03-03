@@ -61,6 +61,9 @@ public class RobotContainer {
         private final CommandXboxController m_controller = new CommandXboxController(
                         OperatorConstants.kDriverControllerPort);
 
+        private final CommandXboxController m_controller2 = new CommandXboxController(
+                        OperatorConstants.kOperControllerPort);
+
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
@@ -84,7 +87,7 @@ public class RobotContainer {
                                                                 -MathUtil.applyDeadband(m_controller.getLeftY(),
                                                                                 OperatorConstants.kDriveDeadband)
                                                                                 * Constants.driveMultiplier,
-                                                                -MathUtil.applyDeadband(m_controller.getRightY(),
+                                                                -MathUtil.applyDeadband(m_controller.getRightX(),
                                                                                 OperatorConstants.kDriveDeadband)
                                                                                 * Constants.driveMultiplier),
                                                 m_driveSub));
@@ -111,11 +114,11 @@ public class RobotContainer {
                 // a() could be replaced with any other button
                 m_controller.leftBumper()
                                 .whileTrue(new intake(m_fuelSub));
-                m_controller.rightBumper()
+                m_controller2.leftBumper()
                                 .whileTrue(new deballonize(m_fuelSub));
-                m_controller.rightTrigger(.7)
-                                .whileTrue(new shoot(m_fuelSub, m_driveSub));
-                m_controller.x()
+                m_controller2.rightTrigger(.7)
+                                .whileTrue(new shoot(m_fuelSub));
+                m_controller2.x()
                                 .onTrue(new stopFuel(m_fuelSub));
 
                 // m_controller.button(4)

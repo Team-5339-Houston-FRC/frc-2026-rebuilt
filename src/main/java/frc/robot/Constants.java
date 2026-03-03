@@ -23,7 +23,7 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
 
-  public static double driveMultiplier = .6;
+  public static double driveMultiplier = .8;
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
@@ -87,7 +87,8 @@ public final class Constants {
 
   public static final class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.05;
+    public static final int kOperControllerPort = 1;
+    public static final double kDriveDeadband = 0.00;
   }
 
   public static final class AutoConstants {
@@ -137,7 +138,7 @@ public final class Constants {
     //public static final int primaryChannelB = 30;
     public static final int secondaryChannelA = 31;
     //public static final int secondaryChannelB = 0;
-    public static final int kMaxSpeedMetersPerSecond = 500;
+    public static final int kMaxSpeedMetersPerSecond = 400;
     public static final double shootingThresholdPercent = 0.9;
     public static final double kMaxVoltgage = 9;
   }
